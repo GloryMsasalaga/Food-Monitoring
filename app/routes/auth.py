@@ -15,33 +15,6 @@ router = APIRouter(tags=["Authentication"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # -------------------------------
-# Login endpoint
-# -------------------------------
-@router.get("/signin", response_class=HTMLResponse)
-async def read_signin(request: Request):
-    return templates.TemplateResponse("signin.html", {"request": request})
-
-@router.post("/login", response_model=TokenResponse)
-def login_student(login: LoginRequest, db: Session = Depends(get_db)):
-    """
-    Authenticate user and return a JWT access token.
-    """
-    # Find student by email
-    student = db.query(Student).filter(Student.email == login.email).first()
-    
-    # Validate credentials
-    if not student or not verify_password(login.password, student.user_password):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials")
-    
-    # Create token with email and role
-    access_token = create_access_token(data={"sub": student.email, "role": student.role})
-    refresh_token = create_refresh_token(data={"sub": student.email})
-    
-    # Return token
-    return {"access_token": access_token, "refresh_token": refresh_token}
-
-
-# -------------------------------
 # Signup endpoint
 # -------------------------------
 @router.post("/signup", response_model=schema.StudentOut)
@@ -62,6 +35,28 @@ def signup(student: schema.StudentSignup, db: Session = Depends(database.get_db)
     db.refresh(new_student)
     return new_student
 
+# -------------------------------
+# Login endpoint
+# -------------------------------
+
+@router.post("/login", response_model=TokenResponse)
+def login_student(login: LoginRequest, db: Session = Depends(get_db)):
+    """
+    Authenticate user and return a JWT access token.
+    """
+    # Find student by email
+    student = db.query(Student).filter(Student.email == login.email).first()
+    
+    # Validate credentials
+    if not student or not verify_password(login.password, student.user_password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials")
+    
+    # Create token with email and role
+    access_token = create_access_token(data={"sub": student.email, "role": student.role})
+    refresh_token = create_refresh_token(data={"sub": student.email})
+    
+    # Return token
+    return {"access_token": access_token, "refresh_token": refresh_token}
 
 # -------------------------------
 # Refresh Token endpoint

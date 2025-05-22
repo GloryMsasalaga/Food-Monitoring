@@ -1,53 +1,57 @@
 # app/schema.py
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from fastapi import Form
 from datetime import date, datetime
 import uuid
 from uuid import UUID
 
 # Schema for creating a new student
 class StudentCreate(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
     email: EmailStr
-    user_password: str
+    user_password: str = Field(..., min_length=8)
     gender: str
     date_of_birth: date
     height_m: float = None
     weight_kg: float = None
     role: str = "student"
-
-
-# Schema for returning student data
-class StudentOut(BaseModel):
-    user_id: UUID
-    first_name: str
-    last_name: str
-    email: EmailStr
-    gender: str
-    date_of_birth: date
-    height_m: float
-    weight_kg: float
-    start_date: datetime
-    role: str
-
-    class Config:
-        from_attributes = True
-
-
 class StudentSignup(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
     email: EmailStr
-    user_password: str
+    user_password: str = Field(..., min_length=8)
     gender: str
     date_of_birth: datetime
     height_m: float
     weight_kg: float
     role: str = "Student"
-
-
-
+    
+    #add form handling
+    @classmethod
+    def as_form(
+        cls,
+        first_name: str = Form(...),
+        last_name: str = Form(...),
+        email: EmailStr = Form(...),
+        user_password: str = Form(...),
+        gender:str = Form(...),
+        date_of_birth: datetime = Form(...),
+        height_m: float = Form(...),
+        weight_kg: float = Form(...),
+    ):
+        return cls(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            user_password=user_password,
+            gender=gender,
+            date_of_birth=datetime.strptime(date_of_birth, "%Y-%m-%d").date(),
+            height_m=height_m,
+            weight_kg=weight_kg,
+        )
+        
 class StudentOut(BaseModel):
     user_id: uuid.UUID
     first_name: str

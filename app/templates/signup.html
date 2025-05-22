@@ -43,45 +43,53 @@
     <div class="container">
       <div class="hero-content">
         <h1>Join TamuTalk Today!</h1>
-        <p class="subtitle">Register to get started</p>
       </div>
       <div class="card">
-        <form action="/setpreference" method="POST">
+        <form class="form-grid" method="POST">
           <div class="form-group input-icon">
-            <label>Full Name</label>
+            <label>First Name</label>
             <i class="fas fa-user"></i>
-            <input type="text" placeholder="John Doe" />
+            <input type="text" name="first_name" placeholder="John" />
           </div>
-
+          <div class="form-group input-icon">
+            <label>Last Name</label>
+            <i class="fas fa-user"></i>
+            <input type="text" name="last_name" placeholder="Doe" />
+          </div>
           <div class="form-group input-icon">
             <label>Email</label>
             <i class="fas fa-envelope"></i>
-            <input type="email" placeholder="your.email@example.com" />
+            <input type="email" name="email" placeholder="your.email@example.com" />
           </div>
-
           <div class="form-group input-icon">
             <label>Password</label>
             <i class="fas fa-key"></i>
-            <input type="password" placeholder="••••••••" />
+            <input type="password" name="user_password" placeholder="••••••••" />
           </div>
           <div class="form-group input-icon">
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" placeholder="••••••••" />
+            <label for="gender">Gender</label>
+            <i class="fas fa-venus-mars"></i>
+            <select name="gender" required>
+              <option value="" disabled selected>Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
           </div>
+          <!-- Other elements like buttons can go outside .form-grid -->
           <button class="btn">Register</button>
         </form>
-        <div class="signup">
-          Already have an account? <a href="/setpreference">Sign in</a>
-        </div>
+      </div>
+      <div class="signup">
+        Already have an account? <a href="/setpreference">Sign in</a>
+      </div>
 
-        <div class="divider">
-          <span>OR</span>
-        </div>
+      <div class="divider">
+        <span>OR</span>
+      </div>
 
-        <div class="social-buttons">
-          <button class="btn-google"><img src="/static/images/OIP (7).jpeg" alt="Google" /></button>
-          <button class="btn-github"><img src="/static/images/github.svg" alt="GitHub" /></button>
-        </div>
+      <div class="social-buttons">
+        <button class="btn-google"><img src="/static/images/OIP (7).jpeg" alt="Google" /></button>
+        <button class="btn-github"><img src="/static/images/github.svg" alt="GitHub" /></button>
       </div>
     </div>
   </section>
