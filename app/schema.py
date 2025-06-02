@@ -130,7 +130,7 @@ class PreferenceCreate(BaseModel):
     meals_per_day: int
     preferred_drink_type: str
     disease: str  # diabetes, hypertension, etc.
-    preferred_meal_type: list[str] = []  # list of favorite foods
+    preferred_meal_type: str
     preffered_allergy: str
 class PreferenceOut(BaseModel):
     preference_id: UUID
@@ -140,7 +140,7 @@ class PreferenceOut(BaseModel):
     meals_per_day: int
     preferred_drink_type: str
     disease: str
-    preferred_meal_type: list[str] = []
+    preferred_meal_type: str
     preffered_allergy: str
     created_at: datetime
     

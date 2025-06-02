@@ -1,12 +1,12 @@
 # app/main.py
-
+from fastapi.responses import RedirectResponse
 import os
 from pathlib import Path
 from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from slowapi import Limiter
