@@ -1,10 +1,10 @@
 # app/schema.py
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
-from fastapi import Form
 from datetime import date, datetime
 import uuid
 from uuid import UUID
+from .models import GenderEnum
 
 # Schema for creating a new student
 class StudentCreate(BaseModel):
@@ -14,43 +14,32 @@ class StudentCreate(BaseModel):
     user_password: str = Field(..., min_length=8)
     gender: str
     date_of_birth: date
-    height_m: float = None
-    weight_kg: float = None
     role: str = "student"
+
+
+# Schema for returning student data
+class StudentOut(BaseModel):
+    user_id: UUID
+    first_name: str
+    last_name: str
+    email: EmailStr
+    gender: str
+    date_of_birth: date
+    start_date: datetime
+    role: str
+
+    class Config:
+        from_attributes = True
+
+
 class StudentSignup(BaseModel):
     first_name: str = Field(..., min_length=1)
     last_name: str = Field(..., min_length=1)
     email: EmailStr
     user_password: str = Field(..., min_length=8)
-    gender: str
+    gender: GenderEnum
     date_of_birth: datetime
-    height_m: float
-    weight_kg: float
     role: str = "Student"
-    
-    #add form handling
-    @classmethod
-    def as_form(
-        cls,
-        first_name: str = Form(...),
-        last_name: str = Form(...),
-        email: EmailStr = Form(...),
-        user_password: str = Form(...),
-        gender:str = Form(...),
-        date_of_birth: datetime = Form(...),
-        height_m: float = Form(...),
-        weight_kg: float = Form(...),
-    ):
-        return cls(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            user_password=user_password,
-            gender=gender,
-            date_of_birth=datetime.strptime(date_of_birth, "%Y-%m-%d").date(),
-            height_m=height_m,
-            weight_kg=weight_kg,
-        )
         
 class StudentOut(BaseModel):
     user_id: uuid.UUID
@@ -58,9 +47,7 @@ class StudentOut(BaseModel):
     last_name: str
     email: EmailStr
     gender: str
-    data_of_birth: datetime
-    height_m: float
-    weight_kg: float
+    date_of_birth: datetime
     role: str = "Student"
 
     class Config:
@@ -93,6 +80,8 @@ class HealthCreate(BaseModel):
     heart_rate_bpm: int
     systolic_bp: int
     diastolic_bp: int
+    height_m: float = None
+    weight_kg: float = None
     measurement_time: datetime
 
 
@@ -104,6 +93,8 @@ class HealthOut(BaseModel):
     heart_rate_bpm: int
     systolic_bp: int
     diastolic_bp: int
+    height_m: float
+    weight_kg: float
     measurement_time: datetime
 
     class config:
@@ -129,6 +120,31 @@ class FoodOut(BaseModel):
     calories_estimate: float
 
     class config:
+        from_attributes = True
+        
+#class for creating new preferences
+class PreferenceCreate(BaseModel):
+    user_id: uuid.UUID
+    dietary_restrictions: str  # vegetarian, vegan, etc.
+    preferred_meal_time: str  # serialized list or JSON
+    meals_per_day: int
+    preferred_drink_type: str
+    disease: str  # diabetes, hypertension, etc.
+    preferred_meal_type: list[str] = []  # list of favorite foods
+    preffered_allergy: str
+class PreferenceOut(BaseModel):
+    preference_id: UUID
+    user_id: uuid.UUID
+    dietary_restrictions: str
+    preferred_meal_time: str
+    meals_per_day: int
+    preferred_drink_type: str
+    disease: str
+    preferred_meal_type: list[str] = []
+    preffered_allergy: str
+    created_at: datetime
+    
+    class Config:
         from_attributes = True
 
 
@@ -176,6 +192,8 @@ class AllergyOut(BaseModel):
 class SuggestionCreate(BaseModel):
     user_id: uuid.UUID
     based_on_bp: str
+    food_sg: str
+    drink_sg: str
     generated_on: datetime
 
 
@@ -184,6 +202,8 @@ class SuggestionOut(BaseModel):
     suggestion_id: UUID
     user_id: uuid.UUID
     based_on_bp: str
+    food_sg: str
+    drink_sg: str
     generated_on: datetime
 
     class config:
@@ -217,4 +237,3 @@ class PasswordResetConfirm(BaseModel):
 
 class TokenRefreshRequest(BaseModel):
     refresh_token: str
-

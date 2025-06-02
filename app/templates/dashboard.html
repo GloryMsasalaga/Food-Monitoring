@@ -332,7 +332,7 @@
       <div class="tab-buttons">
         <button class="tab-button active" onclick="showSection('health')">Health Tracking</button>
         <button class="tab-button" onclick="showSection('meal')">Meal Ideas</button>
-        <button class="tab-button" onclick="showSection('favorites')">Favorites</button>
+        <button class="tab-button" onclick="showSection('preferences')">My preferences</button>
       </div>
 
       <!-- Health Tracking Section -->
@@ -416,138 +416,238 @@
             <span></span>
           </div>
         </div>
+      </div>
+      <!-- Health Tracking Section ends -->
 
-        <!-- Meal Ideas Section -->
-        <div id="meal" class="content-section">
-          <h2 class="subheading">Breakfast Ideas <a href="#" class="view-all">View all</a></h2>
-          <div class="cards">
-            <article class="card">
-              <span class="tag">Breakfast</span>
-              <span class="time">🕒 15 mins</span>
-              <h3>Supu chapati</h3>
-              <p>Creamy avocado spread on whole grain toast topped with perfectly poached eggs.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
+      <!-- Meal Ideas Section -->
+      <div id="meal" class="content-section">
+        <h2 class="subheading">Breakfast Ideas <a href="#" class="view-all">View all</a></h2>
+        <div class="cards">
+          <article class="card">
+            <span class="tag">Breakfast</span>
+            <span class="time">🕒 15 mins</span>
+            <h3>Supu chapati</h3>
+            <p>Supu ya ng'ombe au kuku iliyotengenezwa vizuri na kuandaliwa pamoja na chapati.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
 
-            <article class="card">
-              <span class="tag">Breakfast</span>
-              <span class="time">🕒 10 mins</span>
-              <h3>Chai, maandazi and chapati</h3>
-              <p>Hearty oatmeal topped with fresh blueberries, honey and a sprinkle of almonds.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
+          <article class="card">
+            <span class="tag">Breakfast</span>
+            <span class="time">🕒 15 mins</span>
+            <h3>Chai, maandazi and chapati</h3>
+            <p>Chai ya rangi au maziwa, pamoja na maandazi au chapati zilizokandwa na kupikwa vizuri.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
 
-            <article class="card">
-              <span class="tag">Breakfast</span>
-              <span class="time">🕒 5 mins</span>
-              <h3>Juice chapati maandazi</h3>
-              <p>Nutritious blend of spinach, banana, almond milk and chia seeds.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
+          <article class="card">
+            <span class="tag">Breakfast</span>
+            <span class="time">🕒 5 mins</span>
+            <h3>Juice chapati maandazi</h3>
+            <p>Nutritious blend of spinach, banana, almond milk and chia seeds.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Lunch Ideas -->
+        <h2 class="subheading">Lunch Ideas <a href="#" class="view-all">View all</a></h2>
+        <div class="cards">
+          <article class="card">
+            <span class="tag">Lunch</span>
+            <span class="time">🕒 15 mins</span>
+            <h3>Wali maini</h3>
+            <p>Creamy avocado spread on whole grain toast topped with perfectly poached eggs.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Lunch</span>
+            <span class="time">🕒 10 mins</span>
+            <h3>Wali Kuku</h3>
+            <p>Hearty oatmeal topped with fresh blueberries, honey and a sprinkle of almonds.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Lunch</span>
+            <span class="time">🕒 5 mins</span>
+            <h3>Ugali Kuku</h3>
+            <p>Nutritious blend of spinach, banana, almond milk and chia seeds.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Dinner Ideas -->
+        <h2 class="subheading">Dinner Ideas <a href="#" class="view-all">View all</a></h2>
+        <div class="cards">
+          <article class="card">
+            <span class="tag">Dinner</span>
+            <span class="time">🕒 15 mins</span>
+            <h3>Wali Nyama</h3>
+            <p>Creamy avocado spread on whole grain toast topped with perfectly poached eggs.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Dinner</span>
+            <span class="time">🕒 10 mins</span>
+            <h3>Wali Samaki</h3>
+            <p>Hearty oatmeal topped with fresh blueberries, honey and a sprinkle of almonds.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Dinner</span>
+            <span class="time">🕒 5 mins</span>
+            <h3>Wali Maharage</h3>
+            <p>Nutritious blend of spinach, banana, almond milk and chia seeds.</p>
+            <div class="card-actions">
+              <button class="btn btn-outline">Details</button>
+            </div>
+          </article>
+        </div>
+      </div>
+      <!-- Meal Ideas Section ends -->
+
+      <!-- Preferences Section -->
+      <div id="preferences" class="content-section">
+        <div id="preference-view" class="metric-card">
+          <div class="preferemce-header">
+            <h2>My Preferences</h2>
+            <p>Your preferences</p>
+            <button id="edit-preference-btn" class="btn btn-primary">Edit preferences</button>
           </div>
+          <div class="preference-details">
+            <div class="metric-item">
+              <span>Dietary Type:</span>
+              <span id="dietary_restriction-type-display">Loading....</span>
+            </div>
 
-          <!-- Lunch Ideas -->
-          <h2 class="subheading">Lunch Ideas <a href="#" class="view-all">View all</a></h2>
-          <div class="cards">
-            <article class="card">
-              <span class="tag">Lunch</span>
-              <span class="time">🕒 15 mins</span>
-              <h3>Wali maini</h3>
-              <p>Creamy avocado spread on whole grain toast topped with perfectly poached eggs.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
+            <div class="metric-item">
+              <span>Food Allergies:</span>
+              <span id="allergies-display">Loading....</span>
+            </div>
 
-            <article class="card">
-              <span class="tag">Lunch</span>
-              <span class="time">🕒 10 mins</span>
-              <h3>Wali Kuku</h3>
-              <p>Hearty oatmeal topped with fresh blueberries, honey and a sprinkle of almonds.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
+            <div class="metric-item">
+              <span>Preferred Meal Times:</span>
+              <span id="meal-times-display">Loading....</span>
+            </div>
 
-            <article class="card">
-              <span class="tag">Lunch</span>
-              <span class="time">🕒 5 mins</span>
-              <h3>Ugali Kuku</h3>
-              <p>Nutritious blend of spinach, banana, almond milk and chia seeds.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
-          </div>
-
-          <!-- Dinner Ideas -->
-          <h2 class="subheading">Dinner Ideas <a href="#" class="view-all">View all</a></h2>
-          <div class="cards">
-            <article class="card">
-              <span class="tag">Dinner</span>
-              <span class="time">🕒 15 mins</span>
-              <h3>Wali Nyama</h3>
-              <p>Creamy avocado spread on whole grain toast topped with perfectly poached eggs.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
-
-            <article class="card">
-              <span class="tag">Dinner</span>
-              <span class="time">🕒 10 mins</span>
-              <h3>Wali Samaki</h3>
-              <p>Hearty oatmeal topped with fresh blueberries, honey and a sprinkle of almonds.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
-
-            <article class="card">
-              <span class="tag">Dinner</span>
-              <span class="time">🕒 5 mins</span>
-              <h3>Wali Maharage</h3>
-              <p>Nutritious blend of spinach, banana, almond milk and chia seeds.</p>
-              <div class="card-actions">
-                <button class="btn btn-outline">Details</button>
-              </div>
-            </article>
-          </div>
-
-          <!-- Favorites Section -->
-          <div id="favorites" class="content-section">
-            <div class="metric-card">
-              <h2>Favorite Items</h2>
-              <p>Your favorite items will appear here</p>
-              <button>Add your favorite food</button>
+            <div class="metric-item">
+              <span>Favorite Foods:</span>
+              <span id="favorite-foods-display">Loading....</span>
+            </div>
+            <div class="metric-item">
+              <span>Drink Preferences:</span>
+              <span id="drink-preferences-display">Loading....</span>
+            </div>
+            <div class="metric-item">
+              <span>Meals Per Day</span>
+              <span id="meals-per-day-display">Loading....</span>
+            </div>
+            <div class="metric-item">
+              <span>Health Conditions:</span>
+              <span id="health-condition-display">Loading....</span>
             </div>
           </div>
         </div>
+      </div>
+      <!-- Preferences Section ends -->
+      <!-- edit mode -->
+      <div id="preferences-edit" class="metric-card" style="display: none;">
+        <div class="preferences-header">
+          <h2>Edit Your Food Preferences</h2>
+          <button id="cancel-edit-btn" class="btn btn-outline">Cancel</button>
+        </div>
 
-      </div> <!-- Closing dashboard-container -->
+        <form id="preferences-form" method="POST" action="/process_preference">
+          <fieldset class="form-group">
+            <legend class="field-label">Favorite Foods</legend>
+            <textarea id="favorite-foods" name="preferred_meal_type" placeholder="List your favorite foods..."
+              rows="3"></textarea>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend class="field-label">Any dietary_restrictionary preferences?</legend>
+            <label><input type="radio" name="dietary_restrictions" value="none" checked> None</label>
+            <label><input type="radio" name="dietary_restrictions" value="vegetarian"> Vegetarian</label>
+            <label><input type="radio" name="dietary_restrictions" value="vegan"> Vegan</label>
+            <label><input type="radio" name="dietary_restrictions" value="pescatarian"> Pescatarian</label>
+            <label><input type="radio" name="dietary_restrictions" value="keto"> Keto</label>
+            <label><input type="radio" name="dietary_restrictions" value="paleo"> Paleo</label>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend class="field-label">Any food allergies?</legend>
+            <label><input type="radio" name="preffered_allergy" value="none" checked> None</label>
+            <label><input type="radio" name="preffered_allergy" value="nuts"> Nuts</label>
+            <label><input type="radio" name="preffered_allergy" value="dairy"> Dairy</label>
+            <label><input type="radio" name="preffered_allergy" value="gluten"> Gluten</label>
+            <label><input type="radio" name="preffered_allergy" value="seafood"> Seafood</label>
+            <label><input type="radio" name="preffered_allergy" value="eggs"> Eggs</label>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend class="field-label">What is your preferred meal time?</legend>
+            <label><input type="radio" name="preferred_meal_time" value="breakfast" checked> Breakfast</label>
+            <label><input type="radio" name="preferred_meal_time" value="lunch"> Lunch</label>
+            <label><input type="radio" name="preferred_meal_time" value="dinner"> Dinner</label>
+            <label><input type="radio" name="preferred_meal_time" value="snack"> Snack</label>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend class="field-label">What type of drink do you prefer?</legend>
+            <label><input type="radio" name="preferred_drink_type" value="water" checked> Water</label>
+            <label><input type="radio" name="preferred_drink_type" value="carbonated drink"> Soda</label>
+            <label><input type="radio" name="preferred_drink_type" value="energy drink"> Energy drink</label>
+            <label><input type="radio" name="preferred_drink_type" value="juices"> Juices</label>
+            <label><input type="radio" name="preferred_drink_type" value="tea"> Tea</label>
+            <label><input type="radio" name="preferred_drink_type" value="coffee"> Coffee</label>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend class="field-label">How many meals do you prefer per day?</legend>
+            <label><input type="radio" name="meals_per_day" value="1"> 1</label>
+            <label><input type="radio" name="meals_per_day" value="2"> 2</label>
+            <label><input type="radio" name="meals_per_day" value="3" checked> 3</label>
+            <label><input type="radio" name="meals_per_day" value="4"> 4</label>
+            <label><input type="radio" name="meals_per_day" value="5"> 5+</label>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend class="field-label">Any health conditions?</legend>
+            <label><input type="radio" name="disease" value="none" checked> None</label>
+            <label><input type="radio" name="disease" value="diabetes"> Diabetes</label>
+            <label><input type="radio" name="disease" value="hypertension"> Hypertension</label>
+            <label><input type="radio" name="disease" value="heart-disease"> Heart Disease</label>
+            <label><input type="radio" name="disease" value="obesity"> Obesity</label>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Preferences</button>
+          </div>
+        </form>
+
+      </div>
     </div>
     <!-- Closing meal-planner -->
-    <script>
-      function showSection(sectionId) {
-        // Remove active class from all buttons and sections
-        document.querySelectorAll('.tab-button').forEach(btn => {
-          btn.classList.remove('active');
-        });
-        document.querySelectorAll('.content-section').forEach(section => {
-          section.classList.remove('active');
-        });
-
-        // Add active class to clicked button and corresponding section
-        document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
-        document.getElementById(sectionId).classList.add('active');
-      }
-    </script>
+    <script src="/static/js/dashboard.js"></script>
   </section>
 </body>
+
 </html>

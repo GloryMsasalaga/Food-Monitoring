@@ -45,42 +45,46 @@
         <h1>Join TamuTalk Today!</h1>
       </div>
       <div class="card">
-        <form class="form-grid" method="POST">
+        <form id="signup-form" class="form-grid" method="POST">
           <div class="form-group input-icon">
             <label>First Name</label>
             <i class="fas fa-user"></i>
-            <input type="text" name="first_name" placeholder="John" />
+            <input type="text" name="first_name" placeholder="John" required />
           </div>
           <div class="form-group input-icon">
             <label>Last Name</label>
             <i class="fas fa-user"></i>
-            <input type="text" name="last_name" placeholder="Doe" />
+            <input type="text" name="last_name" placeholder="Doe" required />
           </div>
           <div class="form-group input-icon">
             <label>Email</label>
             <i class="fas fa-envelope"></i>
-            <input type="email" name="email" placeholder="your.email@example.com" />
+            <input type="email" name="email" placeholder="your.email@example.com" required />
           </div>
           <div class="form-group input-icon">
             <label>Password</label>
             <i class="fas fa-key"></i>
-            <input type="password" name="user_password" placeholder="••••••••" />
+            <input type="password" name="user_password" placeholder="••••••••" required />
           </div>
           <div class="form-group input-icon">
             <label for="gender">Gender</label>
             <i class="fas fa-venus-mars"></i>
             <select name="gender" required>
               <option value="" disabled selected>Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="Male">male</option>
+              <option value="Female">female</option>
             </select>
           </div>
-          <!-- Other elements like buttons can go outside .form-grid -->
+          <div class="form-group input-icon">
+            <label for="date_of_birth">Date of Birth</label>
+            <i class="fas fa-calendar-alt"></i>
+            <input type="date" id="date_of_birth" name="date_of_birth" required />
+          </div> 
           <button class="btn">Register</button>
         </form>
       </div>
       <div class="signup">
-        Already have an account? <a href="/setpreference">Sign in</a>
+        Already have an account? <a href="/login">Sign in</a>
       </div>
 
       <div class="divider">
@@ -93,6 +97,7 @@
       </div>
     </div>
   </section>
+  <script src="/static/js/signup.js"></script>
 </body>
 
 </html>
