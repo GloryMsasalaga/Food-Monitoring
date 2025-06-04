@@ -1,0 +1,22 @@
+# Ginx Configuration File
+# Define your project scripts and configuration here
+
+# Scripts
+scripts:
+  serve:
+    command: "uvicorn app.main:app --reload"
+    description: runs server
+  
+  generate:
+    command: "alembic revision --autogenerate -m EXTRA_STRING"
+    description: generate a new migration script
+
+# Plugins
+plugins:
+  enabled:
+  - version-sync
+
+# Settings
+settings:
+  dangerous_commands: true
+

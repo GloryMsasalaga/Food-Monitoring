@@ -1,16 +1,17 @@
 # app/schema.py
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from datetime import date, datetime
 import uuid
 from uuid import UUID
+from .models import GenderEnum
 
 # Schema for creating a new student
 class StudentCreate(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
     email: EmailStr
-    user_password: str
+    user_password: str = Field(..., min_length=8)
     gender: str
     date_of_birth: date
     role: str = "student"
@@ -32,16 +33,14 @@ class StudentOut(BaseModel):
 
 
 class StudentSignup(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
     email: EmailStr
-    user_password: str
-    gender: str
+    user_password: str = Field(..., min_length=8)
+    gender: GenderEnum
     date_of_birth: datetime
     role: str = "Student"
-
-
-
+        
 class StudentOut(BaseModel):
     user_id: uuid.UUID
     first_name: str
@@ -122,15 +121,42 @@ class FoodOut(BaseModel):
 
     class config:
         from_attributes = True
+        
+#class for creating new preferences
+class PreferenceCreate(BaseModel):
+    user_id: uuid.UUID
+    dietary_restrictions: str  # vegetarian, vegan, etc.
+    preferred_meal_time: str  # serialized list or JSON
+    meals_per_day: int
+    preferred_drink_type: str
+    disease: str  # diabetes, hypertension, etc.
+    preferred_meal_type: str
+    preffered_allergy: str
+class PreferenceOut(BaseModel):
+    preference_id: UUID
+    user_id: uuid.UUID
+    dietary_restrictions: str
+    preferred_meal_time: str
+    meals_per_day: int
+    preferred_drink_type: str
+    disease: str
+    preferred_meal_type: str
+    preffered_allergy: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 
 # Schema for creating new Drink
 class DrinkCreate(BaseModel):
     user_id: uuid.UUID
     drink_type: str
-    sugar_g: float
-    volume_ml: int
-    drink_time: datetime
+    amount: float
+    unit: str
+    intake_time: datetime
+    amount_ml: int
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 
 # Schema for returning drink data
@@ -138,9 +164,9 @@ class DrinkOut(BaseModel):
     drink_id: UUID
     user_id: uuid.UUID
     drink_type: str
-    sugar_g: float
-    volume_ml: int
-    drink_time: datetime
+    amount: float
+    amount_ml: int
+    intake_time: datetime
 
     class config:
         from_attributes = True
@@ -213,4 +239,3 @@ class PasswordResetConfirm(BaseModel):
 
 class TokenRefreshRequest(BaseModel):
     refresh_token: str
-

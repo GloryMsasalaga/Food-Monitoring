@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, status, Request
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from app.utils import templates
@@ -7,7 +7,7 @@ import uuid
 
 from app.models import Student
 from app.schema import LoginRequest, TokenResponse, TokenRefreshRequest
-from app.security import verify_password, create_access_token, create_refresh_token, verify_reset_token, hash_password, verify_refresh_token
+from app.security import verify_password, create_access_token, create_refresh_token, hash_password, verify_refresh_token
 from app.database import get_db
 from app import models, schema, database, security
 
@@ -18,7 +18,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 # Login endpoint
 # -------------------------------
 @router.post("/login", response_model=TokenResponse)
-def login_student(login: LoginRequest, db: Session = Depends(get_db)):
+def login_student(login: LoginRequest, response: Response, db: Session = Depends(get_db)):
     """
     Authenticate user and return a JWT access token.
     """
@@ -32,6 +32,25 @@ def login_student(login: LoginRequest, db: Session = Depends(get_db)):
     # Create token with email and role
     access_token = create_access_token(data={"sub": student.email, "role": student.role})
     refresh_token = create_refresh_token(data={"sub": student.email})
+    
+     # Set cookies
+    response.set_cookie(
+        key="access_token", 
+        value=f"Bearer {access_token}", 
+        httponly=True, 
+        max_age=3600,
+        samesite="lax",
+        secure=True  # Set to False if not using HTTPS in development
+    )
+    
+    response.set_cookie(
+        key="refresh_token", 
+        value=refresh_token, 
+        httponly=True, 
+        max_age=7*24*3600,  # 7 days
+        samesite="lax",
+        secure=True  # Set to False if not using HTTPS in development
+    )
     
     # Return token
     return {"access_token": access_token, "refresh_token": refresh_token}
@@ -53,23 +72,35 @@ def signup(student: schema.StudentSignup, db: Session = Depends(database.get_db)
 
     # Create new student instance
     new_student = models.Student(**student.model_dump())
+    print(str(new_student))
     db.add(new_student)
     db.commit()
     db.refresh(new_student)
     return new_student
 
-
 # -------------------------------
 # Refresh Token endpoint
 # -------------------------------
 @router.post("/refresh", response_model=TokenResponse)
-def refresh_token(request: TokenRefreshRequest):
-    email = verify_refresh_token(request.refresh_token)
+def refresh_token(request: TokenRefreshRequest, response: Response):
+    refresh_token = request.cookies.get("refresh_token")
+    email = verify_refresh_token(refresh_token)
     if not email:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
     # Issue new access token
     new_access_token = create_access_token(data={"sub": email})
+    
+    # Set new access token in cookie
+    response.set_cookie(
+        key="access_token", 
+        value=f"Bearer {new_access_token}", 
+        httponly=True, 
+        max_age=3600,
+        samesite="lax",
+        secure=True  # Set to False if not using HTTPS in development
+    )
+    
     return {
         "access_token": new_access_token,
         "refresh_token": request.refresh_token

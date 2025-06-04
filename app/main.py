@@ -1,26 +1,29 @@
 # app/main.py
-
+from fastapi.responses import RedirectResponse
 import os
 from pathlib import Path
 from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
+from sqlalchemy.orm import Session
 from app import models, database
+from app.routes.auth import login_student
+from app.routes.secure import get_current_user
 from jose import jwt
 from app.models import Student
-from app.routes.auth import login_student
+
 from app.security import SECRET_KEY, ALGORITHM
 from app.routes import (
     student, device, health, food, drink,
-    allergy, food_suggestion, auth, secure, password_reset
+    allergy, food_suggestion, auth, secure, password_reset, preference
 )
 
 # Load environment variables from .env file
@@ -102,6 +105,7 @@ app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(food.router, prefix="/food", tags=["Food"])
 app.include_router(drink.router, prefix="/drink", tags=["Drink"])
 app.include_router(allergy.router, prefix="/allergy", tags=["Allergy"])
+app.include_router(preference.router)
 
 # Root route
 
@@ -126,6 +130,85 @@ async def read_dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @app.get("/setpreference", response_class=HTMLResponse)
-async def read_setpreference(request: Request):
+async def read_setpreference(request: Request, user: Student = Depends(get_current_user)):
+    # This will redirect to login if user is not authenticated
     from app.utils import templates
-    return templates.TemplateResponse("setpreference.html", {"request": request})
+    return templates.TemplateResponse("setpreference.html", {"request": request, "user": user})
+
+@app.post("/process_preference", response_class=HTMLResponse)
+async def process_preference(
+    request: Request,
+    dietary_restrictions: str = Form(...),
+    preferred_meal_time: str = Form(...),
+    preferred_drink_type: str = Form(...),
+    meals_per_day: int = Form(...),
+    disease: str = Form(...),
+    preferred_meal_type: str = Form(...),
+    preffered_allergy: str = Form(...),
+    db: Session = Depends(database.get_db),
+    current_user = Depends(get_current_user)
+):
+    try:
+        existing_preference = db.query(models.UserPreference).filter(models.UserPreference.user_id == current_user.user_id).first()
+        if existing_preference:
+            existing_preference.preferred_meal_type = preferred_meal_type
+            existing_preference.preffered_allergy = preffered_allergy
+            existing_preference.dietary_restrictions = dietary_restrictions
+            existing_preference.preferred_meal_time = preferred_meal_time
+            existing_preference.preferred_drink_type = preferred_drink_type
+            existing_preference.meals_per_day = meals_per_day
+            existing_preference.disease = disease
+            db.commit()
+        else:
+            new_preference = models.UserPreference(
+                user_id = current_user.user_id,
+                preferred_meal_type = preferred_meal_type,
+                preffered_allergy = preffered_allergy,
+                dietary_restrictions = dietary_restrictions,
+                preferred_meal_time = preferred_meal_time,
+                preferred_drink_type = preferred_drink_type,
+                meals_per_day = meals_per_day,
+                disease = disease,
+            )
+            db.add(new_preference)
+            db.commit()
+            
+        return RedirectResponse(
+            url="/dashboard",
+            status_code=302
+        )
+    except Exception as e:
+        # Log the error
+        print(f"Error saving preferences: {str(e)}")
+        
+        # Instead of error.html, redirect to dashboard with error parameter
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse(
+            url=f"/dashboard?error=Could+not+save+preferences.+Please+try+again.",
+            status_code=302
+        )
+
+@app.get("/dashboard/preference", response_class=JSONResponse)
+async def dashboard_preference(
+    current_user = Depends(get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    """Get preferences for dashboard display"""
+    preference = db.query(models.UserPreference).filter(
+        models.UserPreference.user_id == current_user.user_id
+    ).first()
+    
+    if not preference:
+        return {"preference": None, "preffered_allergy": []}
+    
+    return {
+        "preference": {
+            "dietary_restrictions": preference.dietary_restrictions,
+            "preferred_meal_type": preference.preferred_meal_type,
+            "preferred_meal_time": preference.preferred_meal_time,
+            "meals_per_day": preference.meals_per_day,
+            "preferred_drink_type": preference.preferred_drink_type,
+            "disease": preference.disease,
+            "preffered_allergy": preference.preffered_allergy
+        }
+    }
