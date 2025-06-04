@@ -111,7 +111,7 @@ def role_required(required_role: str):
 # Config (you may move these to a config file)
 RESET_SECRET_KEY = "FfOgGTpgJh-v8FsR-oHU5hjC4T3a24ixjX2hIlewaiJRemBAVsHm_YmIrckFXwcIDlp2IvAVa_FliCmJ7Z2cYw"
 RESET_ALGORITHM = "HS256"
-RESET_TOKEN_EXPIRE_MINUTES = 15
+RESET_TOKEN_EXPIRE_MINUTES = 20
 
 
 def create_reset_token(data: dict):

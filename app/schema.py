@@ -1,5 +1,6 @@
 # app/schema.py
 
+from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 from datetime import date, datetime
 import uuid
@@ -16,16 +17,14 @@ class StudentCreate(BaseModel):
     role: str = "student"
 
 
-# Schema for returning student data
 class StudentOut(BaseModel):
-    user_id: UUID
+    user_id: uuid.UUID
     first_name: str
     last_name: str
     email: EmailStr
     gender: str
-    date_of_birth: date
-    start_date: datetime
-    role: str
+    date_of_birth: datetime
+    role: str = "student"
 
     class Config:
         from_attributes = True
@@ -38,22 +37,7 @@ class StudentSignup(BaseModel):
     user_password: str
     gender: str
     date_of_birth: datetime
-    role: str = "Student"
-
-
-
-class StudentOut(BaseModel):
-    user_id: uuid.UUID
-    first_name: str
-    last_name: str
-    email: EmailStr
-    gender: str
-    date_of_birth: datetime
-    role: str = "Student"
-
-    class Config:
-        from_attributes = True
-
+    role: str = "student"
 
 
 # Schema for creating new device data
@@ -98,7 +82,7 @@ class HealthOut(BaseModel):
     weight_kg: float
     measurement_time: datetime
 
-    class config:
+    class Config:
         from_attributes = True
 
 
@@ -108,7 +92,13 @@ class FoodCreate(BaseModel):
     meal_type: str
     food_items: str
     intake_time: datetime
-    calories_estimate: float
+    calories_estimate: Optional[float] = None
+    sugar_g: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    fat_g: Optional[float] = None
+    protein_g: Optional[float] = None
+    carbohydrates_g: Optional[float] = None
+    cholesterol_mg: Optional[float] = None
 
 
 # Schema for returning Food data
@@ -118,9 +108,15 @@ class FoodOut(BaseModel):
     meal_type: str
     food_items: str
     intake_time: datetime
-    calories_estimate: float
+    calories_estimate: Optional[float] = None
+    sugar_g: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    fat_g: Optional[float] = None
+    protein_g: Optional[float] = None
+    carbohydrates_g: Optional[float] = None
+    cholesterol_mg: Optional[float] = None
 
-    class config:
+    class Config:
         from_attributes = True
 
 
@@ -128,9 +124,14 @@ class FoodOut(BaseModel):
 class DrinkCreate(BaseModel):
     user_id: uuid.UUID
     drink_type: str
-    sugar_g: float
+    sugar_g: Optional[float] = None
     volume_ml: int
     drink_time: datetime
+    calories: Optional[float] = None
+    caffeine_mg: Optional[float] = None
+    alcohol_pct: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    potassium_mg: Optional[float] = None
 
 
 # Schema for returning drink data
@@ -138,11 +139,17 @@ class DrinkOut(BaseModel):
     drink_id: UUID
     user_id: uuid.UUID
     drink_type: str
-    sugar_g: float
+    sugar_g: Optional[float] = None
     volume_ml: int
     drink_time: datetime
+    calories: Optional[float] = None
+    caffeine_mg: Optional[float] = None
+    alcohol_pct: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    potassium_mg: Optional[float] = None
 
-    class config:
+
+    class Config:
         from_attributes = True
 
 
@@ -160,29 +167,29 @@ class AllergyOut(BaseModel):
     allergy_type: str
     description: str
 
-    class config:
+    class Config:
         from_attributes = True
 
 
 # Schema for creating new suggestion
 class SuggestionCreate(BaseModel):
     user_id: uuid.UUID
-    based_on_bp: str
     food_sg: str
     drink_sg: str
     generated_on: datetime
+    suggestion_type: str
 
 
 # Schema for returning Food suggestion data
 class SuggestionOut(BaseModel):
     suggestion_id: UUID
     user_id: uuid.UUID
-    based_on_bp: str
     food_sg: str
     drink_sg: str
     generated_on: datetime
+    suggestion_type: str
 
-    class config:
+    class Config:
         from_attributes = True
 
 

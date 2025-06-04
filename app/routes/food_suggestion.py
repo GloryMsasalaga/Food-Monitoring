@@ -2,7 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schema, database
 from app.database import get_db
-from app.security import require_admin
+from app.security import require_admin, get_current_user
+from app.utils import calculate_nutrient_percentages
+from app.utils import generate_nutrient_comments
+from datetime import datetime, timedelta, timezone
 import uuid
 
 router = APIRouter(prefix="/suggestions", tags=["Suggestions"])
@@ -82,3 +85,49 @@ def delete_suggestion(
     return {"detail": "Suggestion deleted"}
 
 
+# -------------------------------
+# AUTO-GENERATE Weekly Food Suggestion (Authenticated user)
+# -------------------------------
+@router.post("/generate/weekly", response_model=schema.SuggestionOut)
+def generate_weekly_food_suggestion(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    end_date = datetime.now(timezone.utc)
+    start_date = end_date - timedelta(days=7)
+
+    # Get last 7 days of food records
+    food_logs = db.query(models.Food).filter(
+        models.Food.user_id == current_user.user_id,
+        models.Food.intake_time >= start_date,
+        models.Food.intake_time <= end_date
+    ).all()
+
+    if not food_logs:
+        raise HTTPException(status_code=404, detail="No food intake data found in past 7 days.")
+
+    totals = {
+        "calories": sum(f.calories_estimate or 0 for f in food_logs),
+        "sugar_g": sum(f.sugar_g or 0 for f in food_logs),
+        "sodium_mg": sum(f.sodium_mg or 0 for f in food_logs),
+        "fat_g": sum(f.fat_g or 0 for f in food_logs),
+        "protein_g": sum(f.protein_g or 0 for f in food_logs),
+        "carbohydrates_g": sum(f.carbohydrates_g or 0 for f in food_logs),
+        "cholesterol_mg": sum(f.cholesterol_mg or 0 for f in food_logs),
+    }
+
+    percentages = calculate_nutrient_percentages(totals)
+    food_comments = generate_nutrient_comments(percentages, suggestion_type="weekly")
+
+    new_suggestion = models.Suggestion(
+        user_id=current_user.user_id,
+        food_sg=str(food_comments),
+        drink_sg="",
+        suggestion_type="weekly"
+        # generated_on=datetime.now(timezone.utc)
+    )
+
+    db.add(new_suggestion)
+    db.commit()
+    db.refresh(new_suggestion)
+    return new_suggestion

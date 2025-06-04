@@ -6,8 +6,8 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 import uuid
 
 from app.models import Student
-from app.schema import LoginRequest, TokenResponse, TokenRefreshRequest
-from app.security import verify_password, create_access_token, create_refresh_token, verify_reset_token, hash_password, verify_refresh_token
+from app.schema import LoginRequest, TokenResponse , TokenRefreshRequest
+from app.security import verify_password, create_access_token, verify_reset_token, hash_password , verify_refresh_token, create_refresh_token
 from app.database import get_db
 from app import models, schema, database, security
 
@@ -34,7 +34,8 @@ def login_student(login: LoginRequest, db: Session = Depends(get_db)):
     refresh_token = create_refresh_token(data={"sub": student.email})
     
     # Return token
-    return {"access_token": access_token, "refresh_token": refresh_token}
+    return {"access_token": access_token, "refresh_token": refresh_token
+            }
 
 
 # -------------------------------

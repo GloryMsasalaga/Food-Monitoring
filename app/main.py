@@ -19,7 +19,7 @@ from app.models import Student
 from app.routes.auth import login_student
 from app.security import SECRET_KEY, ALGORITHM
 from app.routes import (
-    student, device, health, food, drink,
+    analysis, student, device, health, food, drink,
     allergy, food_suggestion, auth, secure, password_reset
 )
 
@@ -31,7 +31,7 @@ models.Base.metadata.create_all(bind=database.engine)
 
 # Initialize FastAPI
 app = FastAPI(
-    title="Food Monitoring API",
+    title="Nutrition Tracking API",
     version="1.0.0",
     description="Monitoring API with JWT Authentication"
 )
@@ -95,6 +95,7 @@ app.openapi = custom_openapi
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(secure.router, prefix="/secure", tags=["Secure"])
 app.include_router(password_reset.router, prefix="/password_reset", tags=["Password Reset"])
+app.include_router(analysis.router, prefix="/analysis", tags=["Analysis"])
 app.include_router(food_suggestion.router, prefix="/suggestions", tags=["Suggestions"])
 app.include_router(student.router, prefix="/student", tags=["Student"])
 app.include_router(device.router, prefix="/device", tags=["Device"])
@@ -129,3 +130,10 @@ async def read_dashboard(request: Request):
 async def read_setpreference(request: Request):
     from app.utils import templates
     return templates.TemplateResponse("setpreference.html", {"request": request})
+
+@app.get("/env-check")
+def check_env():
+    return {
+        "app_id": os.getenv("NUTRITIONIX_APP_ID"),
+        "app_key": os.getenv("NUTRITIONIX_API_KEY")
+    }

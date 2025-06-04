@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schema, database
 from app.database import get_db
+from app.utils import analyze_food_nutrition
 from app.security import require_admin
 import uuid
 
@@ -18,11 +19,21 @@ def create_food(
     db: Session = Depends(get_db),
     current_user = Depends(require_admin)
 ):
-    new_food = models.Food(**food.model_dump())
+    # Analyze the food nutrition using Nutritionix
+    try:
+        nutrition_data = analyze_food_nutrition(food.food_items)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Nutrition analysis failed: {e}")
+
+    food_data = food.model_dump()
+    food_data.update(nutrition_data)  # Add nutrition values from API
+
+    new_food = models.Food(**food_data)
     db.add(new_food)
     db.commit()
     db.refresh(new_food)
     return new_food
+
 
 
 # -------------------------
@@ -84,3 +95,25 @@ def delete_food(
     return {"detail": "Food deleted"}
 
 
+
+# from fastapi import APIRouter, Depends, HTTPException
+# from sqlalchemy.orm import Session
+# from datetime import timezone
+# from app import models, database
+# from app.security import require_admin
+
+# router = APIRouter(prefix="/admin", tags=["Admin"])
+
+# @router.post("/fix-naive-intake-times")
+# def fix_naive_intake_times(
+#     db: Session = Depends(database.get_db),
+#     current_user = Depends(require_admin)
+# ):
+#     updated_count = 0
+#     all_foods = db.query(models.Food).all()
+#     for food in all_foods:
+#         if food.intake_time and food.intake_time.tzinfo is None:
+#             food.intake_time = food.intake_time.replace(tzinfo=timezone.utc)
+#             updated_count += 1
+#     db.commit()
+#     return {"detail": f"Fixed {updated_count} food records with naive intake_time timestamps."}
