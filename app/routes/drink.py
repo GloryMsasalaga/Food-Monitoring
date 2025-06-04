@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app import models, schema, database
 from app.database import get_db
 from app.security import require_admin
+from app.security import get_current_user
 import uuid
 
 router = APIRouter(prefix="/drink", tags=["Drink"])
@@ -81,4 +82,25 @@ def delete_drink(
     db.commit()
     return {"detail": "Drink deleted"}
 
+# -------------------------
+# Track Drink Intake (Authenticated user)
+# -------------------------
+@router.post("/track", response_model=schema.DrinkOut)
+def track_drink(
+    drink: schema.DrinkCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    new_drink = models.Drink(
+        user_id=current_user.user_id,
+        drink_type=drink.drink_type,
+        unit=drink.unit,
+        amount_ml=drink.amount_ml,
+        intake_time=drink.intake_time,
+        timestamp=drink.timestamp
+    )
+    db.add(new_drink)
+    db.commit()
+    db.refresh(new_drink)
+    return new_drink
 

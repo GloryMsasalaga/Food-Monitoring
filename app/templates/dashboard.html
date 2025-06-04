@@ -297,6 +297,187 @@
         transform: translateY(0);
       }
     }
+
+    .tracking-section {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tracking-section h3 {
+      color: #f06292;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .tracking-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .btn-track {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      background-color: #f0f0f0;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-track:hover {
+      background-color: #e0e0e0;
+    }
+
+    .btn-track.active {
+      background-color: #ff4b8b;
+      color: white;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .text-input,
+    .number-input,
+    .select-input,
+    .time-input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .text-input {
+      flex: 1;
+    }
+
+    .number-input {
+      width: 70px;
+    }
+
+    .select-input {
+      width: 80px;
+    }
+
+    .time-input {
+      width: 120px;
+    }
+
+    .items-list {
+      margin-top: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .tracked-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tracked-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-icon {
+      margin-right: 5px;
+      color: #4a90e2;
+    }
+
+    .item-time {
+      color: #777;
+      font-size: 0.9em;
+    }
+
+    .progress-container {
+      height: 20px;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #4a90e2;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      font-size: 12px;
+      line-height: 20px;
+      transition: width 0.3s ease;
+    }
+
+    .no-items-message {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      padding: 10px 0;
+    }
+
+    #notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .notification {
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 280px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .notification.success {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .notification.info {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    .notification.warning {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .notification.error {
+      background-color: #f44336;
+      color: white;
+    }
   </style>
 </head>
 
@@ -324,7 +505,7 @@
     <div class="planner-header">
       <div class="planner-text">
         <h1>Your Meal Planner</h1>
-        <p>Get personalized meal suggestions based on your preferences</p>
+        <p>Tracking your eating habits to mantain a healthy lifestyle.</p>
       </div>
       <button class="btn btn-primary">Plan Your Week</button>
     </div>
@@ -354,38 +535,109 @@
         </div>
 
         <div class="metric-card">
-          <h2>Drink Tracking</h2>
-          <div class="metric-item">
-            <span>Water:</span>
-            <span></span>
-          </div>
-          <div class="metric-item">
-            <span>Green Tea:</span>
-            <span></span>
-          </div>
-          <div class="metric-item">
-            <span>Black Tea:</span>
-            <span></span>
-          </div>
-          <div class="metric-item">
-            <span>Coffee:</span>
-            <span></span>
-          </div>
-        </div>
+          <h2>Daily Food & Drink Tracking</h2>
 
-        <div class="metric-card">
-          <h2>Food Intake</h2>
-          <div class="metric-item">
-            <span>Breakfast:</span>
-            <span></span>
+          <!-- Meal Type Selection -->
+          <div class="tracking-section">
+            <h3>What are you eating?</h3>
+            <div class="tracking-buttons">
+              <button type="button" class="btn btn-track" data-track="meal_type" data-value="breakfast">
+                <i class="fas fa-bacon"></i> Breakfast
+              </button>
+              <button type="button" class="btn btn-track" data-track="meal_type" data-value="lunch">
+                <i class="fas fa-hamburger"></i> Lunch
+              </button>
+              <button type="button" class="btn btn-track" data-track="meal_type" data-value="dinner">
+                <i class="fas fa-drumstick-bite"></i> Dinner
+              </button>
+              <button type="button" class="btn btn-track" data-track="meal_type" data-value="snack">
+                <i class="fas fa-cookie"></i> Snack
+              </button>
+            </div>
           </div>
-          <div class="metric-item">
-            <span>Lunch:</span>
-            <span></span>
+
+          <!-- Food Items Input -->
+          <div class="tracking-section">
+            <h3>Food Items</h3>
+            <p>What food items are you consuming?</p>
+            <div class="input-group">
+              <input type="text" id="food-items-input" class="text-input"
+                placeholder="Enter food items (comma separated)">
+              <button type="button" class="btn btn-primary" id="add-food-items">
+                <i class="fas fa-plus"></i> Add
+              </button>
+            </div>
+            <div id="food-items-list" class="items-list">
+              <!-- Food items will be displayed here -->
+              <p class="no-items-message">No food items recorded today</p>
+            </div>
           </div>
-          <div class="metric-item">
-            <span>Dinner:</span>
-            <span></span>
+
+          <!-- Drink Type Selection -->
+          <div class="tracking-section">
+            <h3>What are you drinking?</h3>
+            <div class="tracking-buttons">
+              <button type="button" class="btn btn-track" data-track="drink_type" data-value="water">
+                <i class="fas fa-tint"></i> Water
+              </button>
+              <button type="button" class="btn btn-track" data-track="drink_type" data-value="green_tea">
+                <i class="fas fa-mug-hot"></i> Green Tea
+              </button>
+              <button type="button" class="btn btn-track" data-track="drink_type" data-value="black_tea">
+                <i class="fas fa-mug-hot"></i> Black Tea
+              </button>
+              <button type="button" class="btn btn-track" data-track="drink_type" data-value="coffee">
+                <i class="fas fa-coffee"></i> Coffee
+              </button>
+              <button type="button" class="btn btn-track" data-track="drink_type" data-value="juice">
+                <i class="fas fa-glass-whiskey"></i> Juice
+              </button>
+              <button type="button" class="btn btn-track" data-track="drink_type" data-value="soda">
+                <i class="fas fa-glass-cheers"></i> Soda
+              </button>
+            </div>
+          </div>
+
+          <!-- Drink Amount Input -->
+          <div class="tracking-section">
+            <h3>Drink Amount</h3>
+            <p>How much did you drink?</p>
+            <div class="input-group">
+              <input type="number" id="drink-amount" class="number-input" min="1" value="1" step="1">
+              <select id="drink-unit" class="select-input">
+                <option value="ml">ml</option>
+                <option value="oz">oz</option>
+                <option value="cup">cup</option>
+                <option value="glass">glass</option>
+              </select>
+              <button type="button" class="btn btn-primary" id="add-drink">
+                <i class="fas fa-plus"></i> Add
+              </button>
+            </div>
+            <div id="drink-items-list" class="items-list">
+              <!-- Drink entries will be displayed here -->
+              <p class="no-items-message">No drinks recorded today</p>
+            </div>
+          </div>
+
+          <!-- Intake Time (Shared for both) -->
+          <div class="tracking-section">
+            <h3>When did you consume this?</h3>
+            <div class="input-group">
+              <input type="time" id="intake-time" class="time-input">
+              <button type="button" class="btn btn-primary" id="set-current-time">
+                <i class="fas fa-clock"></i> Current Time
+              </button>
+            </div>
+          </div>
+
+          <!-- Water Goal Progress -->
+          <div class="tracking-section">
+            <h3>Daily Water Goal</h3>
+            <div class="progress-container">
+              <div class="progress-bar" id="water-progress" style="width: 0%;">0%</div>
+            </div>
+            <p class="goal-text">0/2000 ml</p>
           </div>
         </div>
 

@@ -152,9 +152,11 @@ class PreferenceOut(BaseModel):
 class DrinkCreate(BaseModel):
     user_id: uuid.UUID
     drink_type: str
-    sugar_g: float
-    volume_ml: int
-    drink_time: datetime
+    amount: float
+    unit: str
+    intake_time: datetime
+    amount_ml: int
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 
 # Schema for returning drink data
@@ -162,9 +164,9 @@ class DrinkOut(BaseModel):
     drink_id: UUID
     user_id: uuid.UUID
     drink_type: str
-    sugar_g: float
-    volume_ml: int
-    drink_time: datetime
+    amount: float
+    amount_ml: int
+    intake_time: datetime
 
     class config:
         from_attributes = True
