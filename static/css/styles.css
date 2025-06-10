@@ -101,6 +101,14 @@ nav .nav-link:hover {
   font-family: 'Poppins', sans-serif;
 }
 
+/* ========== BUTTON CONTAINER ========== */
+.button-container {
+  grid-column: 1 / -1; /* Span full width */
+  display: flex;
+  justify-content: center; /* Center the button */
+  margin-top: 1rem; /* Add spacing */
+}
+
 /* ========== HERO ========== */
 .hero {
   padding: 4rem 0;
@@ -522,32 +530,30 @@ p.subtitle {
 
 .card {
   background-color: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-  padding: 1.5rem;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 1.2rem 1.2rem;
+  width: 100%;
+  max-width: 540px; /* Wider for 2 columns */
+  max-height: 420px;
   margin: 2rem auto;
-  box-sizing: border-box;
-}
-
-.card h2 {
-  font-family: 'Comic Neue', cursive;
-  margin-bottom: 0.2rem;
-  font-size: 1.4rem;
-}
-
-.card p {
-  font-size: 0.95rem;
-  color: #777;
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  text-align: left;
-  margin-bottom: 1rem;
   position: relative;
+  transform: translateY(-5%);
+  overflow-y: auto;
+}
+
+/* Add this for the form grid layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+}
+
+/* Make sure form-group takes full width of its grid cell */
+.form-group {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0;
 }
 
 .form-group label {
@@ -573,9 +579,11 @@ p.subtitle {
   margin-top: 0.9rem;
   color: #888;
 }
-
 .input-icon {
   position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0;
 }
 
 .forgot {
@@ -594,12 +602,13 @@ p.subtitle {
   background-color: #f06292;
   color: white;
   border: none;
-  padding: 0.6rem 1rem;
+  padding: 0.8rem 2rem;
   border-radius: 2rem;
-  width: 100%;
+  width: auto;
   font-size: 0.9rem;
   /* font-weight: bold; */
   margin-top: 1rem;
+  transition: background 0.3s;
   cursor: pointer;
 }
 

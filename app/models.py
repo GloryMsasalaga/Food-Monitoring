@@ -1,13 +1,20 @@
 # app/models.py
 
 from pydantic import BaseModel, EmailStr
-from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Text, TIMESTAMP
+from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Text, TIMESTAMP, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID
+from datetime import datetime
 import uuid
 from sqlalchemy.sql import func
 from app.database import Base
+import enum
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
-
+Base = declarative_base()
+class GenderEnum(str, enum.Enum):
+    male = "Male"
+    female = "Female"
 class Student(Base):
     __tablename__ = "student"
 
@@ -16,7 +23,7 @@ class Student(Base):
     last_name = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     user_password = Column(Text, nullable=False)
-    gender = Column(String(6), nullable=False)
+    gender = Column(SQLEnum(GenderEnum, name="gender_enum"), nullable=False)
     date_of_birth = Column(DateTime, nullable=False)
     start_date = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
     role = Column(String, default="student", nullable=False)  # student or admin
@@ -102,3 +109,19 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
+class UserPreference(Base):
+    __tablename__ = "user_preference"
+
+    preference_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("student.user_id"))
+    preferred_meal_type = Column(String)
+    preffered_allergy = Column(String)
+    dietary_restrictions = Column(String)
+    preferred_meal_time = Column(String)
+    preferred_drink_type = Column(String)
+    meals_per_day = Column(Integer)
+    disease = Column(String)
+    created_at = Column(DateTime, default=datetime.now)
+    
+    # Relationship to user
+    user = relationship("Student")

@@ -4,6 +4,7 @@ from app import models, schema
 from app.database import get_db
 from app.security import require_admin
 from app.utils import analyze_drink_nutrition
+from app.security import get_current_user
 import uuid
 
 router = APIRouter(prefix="/drink", tags=["Drink"])
@@ -87,4 +88,5 @@ def delete_drink(
     db.delete(drink)
     db.commit()
     return {"detail": "Drink deleted"}
+
 

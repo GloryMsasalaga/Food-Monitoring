@@ -1,17 +1,18 @@
 # app/schema.py
 
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from datetime import date, datetime
 import uuid
 from uuid import UUID
+from .models import GenderEnum
 
 # Schema for creating a new student
 class StudentCreate(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
     email: EmailStr
-    user_password: str
+    user_password: str = Field(..., min_length=8)
     gender: str
     date_of_birth: date
     role: str = "student"
@@ -31,11 +32,11 @@ class StudentOut(BaseModel):
 
 
 class StudentSignup(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str = Field(..., min_length=1)
+    last_name: str = Field(..., min_length=1)
     email: EmailStr
-    user_password: str
-    gender: str
+    user_password: str = Field(..., min_length=8)
+    gender: GenderEnum
     date_of_birth: datetime
     role: str = "student"
 
@@ -90,6 +91,31 @@ class FoodOut(BaseModel):
     carbohydrates_g: Optional[float] = None
     cholesterol_mg: Optional[float] = None
 
+    class Config:
+        from_attributes = True
+        
+#class for creating new preferences
+class PreferenceCreate(BaseModel):
+    user_id: uuid.UUID
+    dietary_restrictions: str  # vegetarian, vegan, etc.
+    preferred_meal_time: str  # serialized list or JSON
+    meals_per_day: int
+    preferred_drink_type: str
+    disease: str  # diabetes, hypertension, etc.
+    preferred_meal_type: str
+    preffered_allergy: str
+class PreferenceOut(BaseModel):
+    preference_id: UUID
+    user_id: uuid.UUID
+    dietary_restrictions: str
+    preferred_meal_time: str
+    meals_per_day: int
+    preferred_drink_type: str
+    disease: str
+    preferred_meal_type: str
+    preffered_allergy: str
+    created_at: datetime
+    
     class Config:
         from_attributes = True
 
@@ -208,4 +234,3 @@ class PasswordResetConfirm(BaseModel):
 
 class TokenRefreshRequest(BaseModel):
     refresh_token: str
-

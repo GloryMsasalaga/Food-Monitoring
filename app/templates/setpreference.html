@@ -14,9 +14,80 @@
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     integrity="sha512-p1CmXU4ieA+fKt/acZZPngOwPAn5LBJ4wL+qez8UYRD2hM6iSvLg8RYEpvuQ/rtwY1Xsqz+GWG+Xcz+me+m2Kg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Your CSS -->
   <link rel="stylesheet" href="static/css/styles.css">
+  <style>
+    /* Notification styles */
+    #notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 350px;
+    }
+
+    .notification {
+      margin-bottom: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      animation: slideIn 0.3s ease;
+    }
+
+    .notification.error {
+      background-color: #f8d7da;
+      border-left: 4px solid #dc3545;
+    }
+
+    .notification.success {
+      background-color: #d4edda;
+      border-left: 4px solid #28a745;
+    }
+
+    .notification.info {
+      background-color: #d1ecf1;
+      border-left: 4px solid #17a2b8;
+    }
+
+    .notification-content {
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notification p {
+      margin: 0;
+      flex-grow: 1;
+      font-size: 14px;
+    }
+
+    .notification .close-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0 5px;
+      opacity: 0.7;
+    }
+
+    .notification .close-btn:hover {
+      opacity: 1;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 
 <body class="signin-page">
@@ -37,116 +108,92 @@
       </div>
     </div>
   </header>
-  <!-- Preferences Wizard Step 1 -->
-  <section class="preferences">
+
+  <!-- Main content -->
+  <section class="preferences" method="GET">
     <h1 class="section-title">Set Your Preferences</h1>
     <p class="section-subtitle">To get personalized meal suggestions</p>
 
-    <div class="wizard-card">
+    <!-- Preferences Wizard Step 1 -->
+    <div class="wizard-card" id="step-1">
       <h2 class="wizard-title">Let's Get to Know You!</h2>
       <p class="wizard-subtitle">Help us personalize your meal suggestions</p>
 
-      <label class="field-label" for="favorite-foods">
+      <label class="field-label" for="preferred_meal_type">
         What are some of your favorite foods?
       </label>
-      <input type="text" id="favorite-foods" class="text-input"
-        placeholder="Pizza, pasta, sushi, etc. (separated by commas)" />
+      <input type="text" id="preferred_meal_type" name="preferred_meal_type" class="text-input"
+        placeholder="Pizza, pasta, sushi, etc. (separated by commas)" required />
       <p class="help-text">This helps us suggest meals you'll enjoy!</p>
 
       <button class="btn btn-primary next-btn">Next Step</button>
     </div>
-  </section>
 
-  <!-- Preferences Wizard Step 2 -->
-  <section class="preferences">
-    <div class="wizard-card">
+    <!-- Preferences Wizard Step 2 -->
+    <div class="wizard-card" id="step-2">
       <h2 class="wizard-title">Let's Get to Know You!</h2>
       <p class="wizard-subtitle">Help us personalize your meal suggestions</p>
 
       <fieldset class="radio-group">
         <legend class="field-label">Do you have any food allergies?</legend>
-        <label><input type="radio" name="allergy" value="dairy"> Dairy</label>
-        <label><input type="radio" name="allergy" value="gluten"> Gluten</label>
-        <label><input type="radio" name="allergy" value="nuts" checked> Nuts</label>
-        <label><input type="radio" name="allergy" value="shellfish"> Shellfish</label>
-        <label><input type="radio" name="allergy" value="soy"> Soy</label>
-        <label><input type="radio" name="allergy" value="eggs"> Eggs</label>
+        <label><input type="radio" name="preffered_allergy" value="none" checked required> None</label>
+        <label><input type="radio" name="preffered_allergy" value="dairy"> Dairy</label>
+        <label><input type="radio" name="preffered_allergy" value="gluten"> Gluten</label>
+        <label><input type="radio" name="preffered_allergy" value="nuts"> Nuts</label>
+        <label><input type="radio" name="preffered_allergy" value="shellfish"> Shellfish</label>
+        <label><input type="radio" name="preffered_allergy" value="soy"> Soy</label>
+        <label><input type="radio" name="preffered_allergy" value="eggs"> Eggs</label>
       </fieldset>
 
       <fieldset class="radio-group">
         <legend class="field-label">Any dietary preferences?</legend>
-        <label><input type="radio" name="diet" value="vegetarian"> Vegetarian</label>
-        <label><input type="radio" name="diet" value="vegan"> Vegan</label>
-        <label><input type="radio" name="diet" value="pescatarian"> Pescatarian</label>
-        <label><input type="radio" name="diet" value="keto"> Keto</label>
-        <label><input type="radio" name="diet" value="paleo"> Paleo</label>
+        <label><input type="radio" name="dietary_restrictions" value="none" checked required> None</label>
+        <label><input type="radio" name="dietary_restrictions" value="vegetarian"> Vegetarian</label>
+        <label><input type="radio" name="dietary_restrictions" value="vegan"> Vegan</label>
+        <label><input type="radio" name="dietary_restrictions" value="pescatarian"> Pescatarian</label>
+        <label><input type="radio" name="dietary_restrictions" value="keto"> Keto</label>
+        <label><input type="radio" name="dietary_restrictions" value="paleo"> Paleo</label>
       </fieldset>
+
       <fieldset class="radio-group">
         <legend class="field-label">What is your preferred meal time?</legend>
-        <label><input type="radio" name="meal-time" value="breakfast"> Breakfast</label>
-        <label><input type="radio" name="meal-time" value="lunch"> Lunch</label>
-        <label><input type="radio" name="meal-time" value="dinner"> Dinner</label>
-        <label><input type="radio" name="meal-time" value="snack"> Snack</label>
+        <label><input type="radio" name="preferred_meal_time" value="breakfast" checked required> Breakfast</label>
+        <label><input type="radio" name="preferred_meal_time" value="lunch"> Lunch</label>
+        <label><input type="radio" name="preferred_meal_time" value="dinner"> Dinner</label>
+        <label><input type="radio" name="preferred_meal_time" value="snack"> Snack</label>
       </fieldset>
+
       <fieldset class="radio-group">
-        <legend class="field-label">What type of drink do you preferences?</legend>
-        <label><input type="radio" name="drinks" value="carbonated drink">Soda</label>
-        <label><input type="radio" name="drinks" value="water">water</label>
-        <label><input type="radio" name="drinks" value="energy drinks">Energy drinks</label>
+        <legend class="field-label">What type of drink do you prefer?</legend>
+        <label><input type="radio" name="preferred_drink_type" value="water" checked required> Water</label>
+        <label><input type="radio" name="preferred_drink_type" value="carbonated drink"> Soda</label>
+        <label><input type="radio" name="preferred_drink_type" value="energy drink"> Energy drink</label>
       </fieldset>
+
       <fieldset class="radio-group">
         <legend class="field-label">How many meals do you prefer per day?</legend>
-        <label><input type="radio" name="meals-per-day" value="1"> 1</label>
-        <label><input type="radio" name="meals-per-day" value="2"> 2</label>
-        <label><input type="radio" name="meals-per-day" value="3"> 3</label>
-        <label><input type="radio" name="meals-per-day" value="4"> 4</label>
+        <label><input type="radio" name="meals_per_day" value="1" required> 1</label>
+        <label><input type="radio" name="meals_per_day" value="2"> 2</label>
+        <label><input type="radio" name="meals_per_day" value="3" checked> 3</label>
+        <label><input type="radio" name="meals_per_day" value="4"> 4</label>
       </fieldset>
+
       <fieldset class="radio-group">
-        <legend class="field-label">Any related disease?</legend>
+        <legend class="field-label">Any related health conditions?</legend>
+        <label><input type="radio" name="disease" value="none" checked required> None</label>
         <label><input type="radio" name="disease" value="diabetes"> Diabetes</label>
         <label><input type="radio" name="disease" value="hypertension"> Hypertension</label>
         <label><input type="radio" name="disease" value="heart-disease"> Heart Disease</label>
       </fieldset>
+
       <div class="wizard-buttons">
         <button class="btn btn-secondary back-btn">Back</button>
-        <button class="btn btn-primary">Save Preferences</button>
+        <button type="submit" class="btn btn-primary save-btn">Save Preferences</button>
       </div>
     </div>
   </section>
-  <script>
-    // JavaScript for Wizard Navigation
-    const wizardCards = document.querySelectorAll('.wizard-card');
-    let currentStep = 0;
 
-    function showStep(step) {
-      wizardCards.forEach((card, index) => {
-        card.style.display = index === step ? 'block' : 'none';
-      });
-    }
-
-    // Handle button clicks
-    document.addEventListener('click', function (e) {
-      // Next button
-      if (e.target.classList.contains('btn-primary') &&
-        e.target.textContent === 'Next Step') {
-        if (currentStep < wizardCards.length - 1) {
-          currentStep++;
-          showStep(currentStep);
-        }
-      }
-
-      // Back button
-      if (e.target.classList.contains('btn-secondary') &&
-        e.target.textContent === 'Back') {
-        if (currentStep > 0) {
-          currentStep--;
-          showStep(currentStep);
-        }
-      }
-    });
-
-    // Initialize first step
-    showStep(currentStep);
-  </script>
+  <script src="/static/js/setpreference.js"></script>
 </body>
+
 </html>
