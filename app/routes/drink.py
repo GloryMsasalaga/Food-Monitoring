@@ -41,9 +41,11 @@ def create_drink(
     db.refresh(new_drink)
     return new_drink
 
+
 @router.get("/", response_model=list[schema.DrinkOut])
 def get_all_drink(db: Session = Depends(get_db)):
     return db.query(models.Drink).all()
+
 
 @router.get("/{drink_id}", response_model=schema.DrinkOut)
 def get_drink(drink_id: uuid.UUID, db: Session = Depends(get_db)):
@@ -51,6 +53,7 @@ def get_drink(drink_id: uuid.UUID, db: Session = Depends(get_db)):
     if not drink:
         raise HTTPException(status_code=404, detail="Drink not found")
     return drink
+
 
 @router.put("/{drink_id}", response_model=schema.DrinkOut)
 def update_drink(
@@ -70,6 +73,7 @@ def update_drink(
     db.refresh(drink)
     return drink
 
+
 @router.delete("/{drink_id}")
 def delete_drink(
     drink_id: uuid.UUID,
@@ -83,3 +87,4 @@ def delete_drink(
     db.delete(drink)
     db.commit()
     return {"detail": "Drink deleted"}
+

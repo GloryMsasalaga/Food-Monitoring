@@ -1,10 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from app.utils import templates
-from fastapi.responses import RedirectResponse, HTMLResponse
-import uuid
-
 from app.models import Student
 from app.schema import LoginRequest, TokenResponse , TokenRefreshRequest
 from app.security import verify_password, create_access_token, verify_reset_token, hash_password , verify_refresh_token, create_refresh_token

@@ -1,12 +1,11 @@
 # app/main.py
 
 import os
-from pathlib import Path
-from fastapi import FastAPI, Request, Form, Depends, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from slowapi import Limiter
@@ -14,13 +13,9 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from app import models, database
-from jose import jwt
-from app.models import Student
-from app.routes.auth import login_student
-from app.security import SECRET_KEY, ALGORITHM
 from app.routes import (
-    analysis, student, device, health, food, drink,
-    allergy, food_suggestion, auth, secure, password_reset
+    analysis, student, health, food, drink,
+    allergy, suggestion, auth, secure, password_reset
 )
 
 # Load environment variables from .env file
@@ -95,10 +90,9 @@ app.openapi = custom_openapi
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(secure.router, prefix="/secure", tags=["Secure"])
 app.include_router(password_reset.router, prefix="/password_reset", tags=["Password Reset"])
-app.include_router(analysis.router, prefix="/analysis", tags=["Analysis"])
-app.include_router(food_suggestion.router, prefix="/suggestions", tags=["Suggestions"])
+app.include_router(analysis.router, prefix="/intake-analysis", tags=["Intake-Analysis"])
+app.include_router(suggestion.router, prefix="/suggestions", tags=["Suggestions"])
 app.include_router(student.router, prefix="/student", tags=["Student"])
-app.include_router(device.router, prefix="/device", tags=["Device"])
 app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(food.router, prefix="/food", tags=["Food"])
 app.include_router(drink.router, prefix="/drink", tags=["Drink"])

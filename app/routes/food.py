@@ -94,26 +94,3 @@ def delete_food(
     db.commit()
     return {"detail": "Food deleted"}
 
-
-
-# from fastapi import APIRouter, Depends, HTTPException
-# from sqlalchemy.orm import Session
-# from datetime import timezone
-# from app import models, database
-# from app.security import require_admin
-
-# router = APIRouter(prefix="/admin", tags=["Admin"])
-
-# @router.post("/fix-naive-intake-times")
-# def fix_naive_intake_times(
-#     db: Session = Depends(database.get_db),
-#     current_user = Depends(require_admin)
-# ):
-#     updated_count = 0
-#     all_foods = db.query(models.Food).all()
-#     for food in all_foods:
-#         if food.intake_time and food.intake_time.tzinfo is None:
-#             food.intake_time = food.intake_time.replace(tzinfo=timezone.utc)
-#             updated_count += 1
-#     db.commit()
-#     return {"detail": f"Fixed {updated_count} food records with naive intake_time timestamps."}

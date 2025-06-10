@@ -4,21 +4,16 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Text, TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
-from datetime import datetime
 
-# Not strictly needed again here since Base is already imported from app.database
-# Base = declarative_base()
 
 class Student(Base):
     __tablename__ = "student"
 
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    first_name = Column(String(100), nullable=False)
-    last_name = Column(String(100), nullable=False)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     user_password = Column(Text, nullable=False)
     gender = Column(String(6), nullable=False)
@@ -27,24 +22,11 @@ class Student(Base):
     role = Column(String, default="student", nullable=False)  # student or admin
 
 
-class Device(Base):
-    __tablename__ = "device"
-
-    device_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    device_type = Column(String(50), nullable=False)
-    registration_date = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
-
-
 class Health(Base):
     __tablename__ = "health"
 
     health_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    device_id = Column(UUID(as_uuid=True), ForeignKey(Device.device_id, ondelete="CASCADE"), nullable=False)
-    heart_rate_bpm = Column(Integer, nullable=False)
-    systolic_bp = Column(Integer, nullable=False)
-    diastolic_bp = Column(Integer, nullable=False)
     height_m = Column(Float, nullable=False)
     weight_kg = Column(Float, nullable=False)
     measurement_time = Column(TIMESTAMP(timezone=True), nullable=False)
@@ -55,11 +37,9 @@ class Food(Base):
 
     food_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    meal_type = Column(String(50), nullable=False)
+    meal_type = Column(String(10), nullable=False)
     food_items = Column(Text, nullable=False)
     intake_time = Column(DateTime(timezone=True), nullable=False)
-
-    # Nutritional values Estimated by NutritionixAPI
     calories_estimate = Column(Float, nullable=True) 
     sugar_g = Column(Float, nullable=True)
     sodium_mg = Column(Float, nullable=True)
@@ -75,37 +55,44 @@ class Drink(Base):
     drink_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
     drink_type = Column(String(100), nullable=False)
-
-    sugar_g = Column(Float, nullable=True)
-    volume_ml = Column(Integer, nullable=False)
     drink_time = Column(DateTime(timezone=True), nullable=False)
+    volume_ml = Column(Integer, nullable=False)
+    sugar_g = Column(Float, nullable=True)
     calories = Column(Float, nullable=True)
     caffeine_mg = Column(Float, nullable=True)
-    alcohol_pct = Column(Float, nullable=True)
     sodium_mg = Column(Float, nullable=True)
     potassium_mg = Column(Float, nullable=True)
+
 
 class Allergy(Base):
     __tablename__ = "allergy"
 
     allergy_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    allergy_type = Column(String(100))
+    allergy_type = Column(String(100), nullable=False)
     description = Column(Text)
 
 
-class Suggestion(Base):
+class FoodSuggestion(Base):
     __tablename__ = "food_suggestion"
 
     suggestion_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    food_sg = Column(String(1000), nullable=False)
-    drink_sg = Column(String(100), nullable=False)
-    generated_on = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=True)
-    suggestion_type = Column(String(10), nullable=False)  # daily, weekly, monthly
+    food_sg = Column(String(5000), nullable=False)
+    generated_on = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    suggestion_type = Column(String(10), nullable=False)  # weekly, monthly
 
 
-# Authentication Pydantic models (not SQLAlchemy models)
+class DrinkSuggestion(Base):
+    __tablename__ = "drink_suggestion"
+
+    suggestion_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
+    drink_sg = Column(String(5000), nullable=False)
+    generated_on = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    suggestion_type = Column(String(10), nullable=False)  # weekly, monthly
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
@@ -114,3 +101,4 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+

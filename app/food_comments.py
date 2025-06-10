@@ -1,6 +1,6 @@
-# Nutrient-specific comments for suggestions
+# Nutrient-specific food comments for suggestions
 
-SUGGESTION_COMMENTS = {
+FOOD_COMMENTS = {
     "calories": {
         "low": "Your calorie intake is lower than recommended. Consider incorporating more energy-rich foods like whole grains, avocados, and nuts.",
         "balanced": "Your calorie intake is well balanced. Keep maintaining this energy level through a consistent diet.",
