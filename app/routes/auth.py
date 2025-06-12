@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, status, Request, BackgroundTasks
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from app.utils import templates
 from fastapi.responses import RedirectResponse, HTMLResponse
 import uuid
+import secrets
+from datetime import datetime, timedelta
 
 from app.models import Student
-from app.schema import LoginRequest, TokenResponse, TokenRefreshRequest
+from app.schema import LoginRequest, TokenResponse, TokenRefreshRequest, PasswordResetRequest
 from app.security import verify_password, create_access_token, create_refresh_token, hash_password, verify_refresh_token
 from app.database import get_db
 from app import models, schema, database, security
@@ -105,4 +107,5 @@ def refresh_token(request: TokenRefreshRequest, response: Response):
         "access_token": new_access_token,
         "refresh_token": request.refresh_token
     }
+
 

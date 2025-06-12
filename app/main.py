@@ -103,7 +103,7 @@ app.include_router(student.router, prefix="/student", tags=["Student"])
 app.include_router(device.router, prefix="/device", tags=["Device"])
 app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(food.router, prefix="/food", tags=["Food"])
-app.include_router(drink.router, prefix="/drink", tags=["Drink"])
+app.include_router(drink.router, tags=["Drink"])
 app.include_router(allergy.router, prefix="/allergy", tags=["Allergy"])
 app.include_router(preference.router)
 
@@ -134,6 +134,11 @@ async def read_setpreference(request: Request, user: Student = Depends(get_curre
     # This will redirect to login if user is not authenticated
     from app.utils import templates
     return templates.TemplateResponse("setpreference.html", {"request": request, "user": user})
+
+@app.get("/reset-password", response_class=HTMLResponse)
+async def reset_password_page(request: Request):
+    from app.utils import templates
+    return templates.TemplateResponse("reset-password.html", {"request": request})
 
 @app.post("/process_preference", response_class=HTMLResponse)
 async def process_preference(
