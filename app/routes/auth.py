@@ -8,6 +8,8 @@ import secrets
 from datetime import datetime, timedelta
 
 from app.models import Student
+from app.schema import LoginRequest, TokenResponse , TokenRefreshRequest
+from app.security import verify_password, create_access_token, verify_reset_token, hash_password , verify_refresh_token, create_refresh_token
 from app.schema import LoginRequest, TokenResponse, TokenRefreshRequest, PasswordResetRequest
 from app.security import verify_password, create_access_token, create_refresh_token, hash_password, verify_refresh_token
 from app.database import get_db
@@ -55,7 +57,8 @@ def login_student(login: LoginRequest, response: Response, db: Session = Depends
     )
     
     # Return token
-    return {"access_token": access_token, "refresh_token": refresh_token}
+    return {"access_token": access_token, "refresh_token": refresh_token
+            }
 
 
 # -------------------------------

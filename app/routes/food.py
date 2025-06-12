@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schema, database
 from app.database import get_db
+from app.utils import analyze_food_nutrition
 from app.security import require_admin
 import uuid
 
@@ -18,11 +19,21 @@ def create_food(
     db: Session = Depends(get_db),
     current_user = Depends(require_admin)
 ):
-    new_food = models.Food(**food.model_dump())
+    # Analyze the food nutrition using Nutritionix
+    try:
+        nutrition_data = analyze_food_nutrition(food.food_items)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Nutrition analysis failed: {e}")
+
+    food_data = food.model_dump()
+    food_data.update(nutrition_data)  # Add nutrition values from API
+
+    new_food = models.Food(**food_data)
     db.add(new_food)
     db.commit()
     db.refresh(new_food)
     return new_food
+
 
 
 # -------------------------
@@ -82,5 +93,4 @@ def delete_food(
     db.delete(food)
     db.commit()
     return {"detail": "Food deleted"}
-
 
