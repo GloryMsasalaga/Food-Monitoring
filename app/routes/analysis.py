@@ -10,7 +10,7 @@ from app.utils import (
     calculate_drink_field_distribution_percentages
 )
 
-router = APIRouter(prefix="/intake-analysis", tags=["Intake-Analysis"])
+router = APIRouter()
 
 def get_food_logs_for_period(user_id, db: Session, days: int):
     """

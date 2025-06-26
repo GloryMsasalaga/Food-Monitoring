@@ -7,7 +7,7 @@ from app.database import get_db
 from app.security import require_admin
 import uuid
 
-router = APIRouter(prefix="/health", tags=["Health"])
+router = APIRouter()
 
 # -------------------------
 # Create Health (Admin only)

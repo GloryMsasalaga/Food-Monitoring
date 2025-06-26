@@ -92,6 +92,25 @@ def analyze_drink_nutrition(query: str) -> Dict[str, float | None]:
         "sodium_mg": drink.get("nf_sodium"),
         "potassium_mg": drink.get("nf_potassium"),
     }
+# -------------------------
+# Drink Type Mapping
+# -------------------------
+def map_drink_type(original_type: str) -> str:
+    drink_type_mapping = {
+        "soda": "soft drink",
+        "juice": "fruit juice",
+        "coffee": "coffee beverage",
+        "tea": "tea beverage",
+        "alcohol": "alcoholic beverage",
+        "water": "plain water",
+        "milk": "dairy beverage",
+        "energy drink": "energy beverage",
+        "black_tea": "tea",
+        "green_tea": "tea",
+        "diet_soda": "diet soft drink",
+        "herbal_tea": "tea"
+    }
+    return drink_type_mapping.get(original_type, original_type)
 
 # -------------------------
 # Food Recommended Daily Allowances (RDA) for 7 Days

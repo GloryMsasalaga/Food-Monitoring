@@ -1,7 +1,7 @@
 # app/main.py
 from fastapi.responses import RedirectResponse
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, Form
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
@@ -100,10 +100,9 @@ app.include_router(suggestion.router, prefix="/suggestions", tags=["Suggestions"
 app.include_router(student.router, prefix="/student", tags=["Student"])
 app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(food.router, prefix="/food", tags=["Food"])
-app.include_router(drink.router, tags=["Drink"])
+app.include_router(drink.router, prefix="/drink", tags=["Drink"])
 app.include_router(allergy.router, prefix="/allergy", tags=["Allergy"])
-app.include_router(preference.router)
-
+app.include_router(preference.router, prefix="/preference", tags=["Preferences"])
 # Root route
 
 @app.get("/", response_class=HTMLResponse)

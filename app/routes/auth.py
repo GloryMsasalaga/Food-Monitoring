@@ -14,8 +14,10 @@ from app.schema import LoginRequest, TokenResponse, TokenRefreshRequest, Passwor
 from app.security import verify_password, create_access_token, create_refresh_token, hash_password, verify_refresh_token
 from app.database import get_db
 from app import models, schema, database, security
+from app.security import get_current_user
+from app.schema import UserInfo
 
-router = APIRouter(tags=["Authentication"])
+router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # -------------------------------
@@ -112,3 +114,12 @@ def refresh_token(request: TokenRefreshRequest, response: Response):
     }
 
 
+@router.get("/current_user", response_model=UserInfo)
+async def get_current_user_info(current_user: Student = Depends(get_current_user)):
+    """Returns current user information based on JWT token"""
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    
+    # Return user information including the UUID
+    return current_user
+    

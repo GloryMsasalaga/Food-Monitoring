@@ -5,7 +5,7 @@ from app.database import get_db
 from app.security import require_admin, require_user
 import uuid
 
-router = APIRouter(prefix="/allergy", tags=["Allergy"])
+router = APIRouter()
 
 
 # -------------------------

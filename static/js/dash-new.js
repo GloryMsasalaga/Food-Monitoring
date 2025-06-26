@@ -389,7 +389,7 @@ function initFoodTracking() {
 /**
  * Add food items to the tracking list
  */
-async function addFoodItems() {
+function addFoodItems() {
   // Get food items input
   const food_items = document.getElementById('food-items-input').value.trim();
 
@@ -409,6 +409,8 @@ async function addFoodItems() {
   const intake_time = document.getElementById('intake-time').value ||
     new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+  console.log('Adding food:', 'date' ,food_items, 'meal type:', meal_type, 'time:', intake_time);
+
   // Create a unique ID for this food entry
   const food_id = Date.now();
 
@@ -419,89 +421,90 @@ async function addFoodItems() {
     mealType: meal_type,
     time: intake_time
   });
+  fetch('/food/food-intake', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+    },
+    body: JSON.stringify({
+      meal_type: meal_type,
+      food_items: food_items.split(',').map(item => item.trim()),
+      intake_time: intake_time
+    })
+  })
+    .then(response => {
+      // Detailed response logging
+      console.log(`Food tracking full response:`, {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+        headers: Object.fromEntries([...response.headers])
+      });
 
-  try {
-    // Send food data to backend, which will use analyze_nutritional_data from utils.py
-    const response = await fetch('/food/food-intake', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-      },
-      body: JSON.stringify({
-        meal_type: meal_type,
-        food_items: food_items.split(',').map(item => item.trim()),
-        intake_time: intake_time
-      })
-    });
+      if (!response.ok) {
+        // Rest of your error handling
+      }
+      return response.json();
+    }).then(data => {
+      console.log('Full server response:', data);
+      // Extract nutrition data from server response
+      // Analyze nutrition data from server response (food.py)
+      let serverNutrition = {
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,
+        sugar: 0
+      };
 
-    // Log full response for debugging
-    console.log(`Food tracking full response:`, {
-      status: response.status,
-      statusText: response.statusText,
-      url: response.url,
-      headers: Object.fromEntries([...response.headers])
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Full server response:', data);
-
-    // Extract nutrition data from server response (should be calculated by analyze_nutritional_data in backend)
-    let serverNutrition = {
-      calories: 0,
-      proteins: 0,
-      carbs: 0,
-      fats: 0,
-      sugar: 0
-    };
-
-    if (data.nutrition) {
-      if (Array.isArray(data.nutrition)) {
-        data.nutrition.forEach(item => {
-          serverNutrition.calories += item.calories_estimate || 0;
-          serverNutrition.proteins += item.protein_g || 0;
-          serverNutrition.carbs += item.carbohydrates_g || 0;
-          serverNutrition.fats += item.fat_g || 0;
-          serverNutrition.sugar += item.sugar_g || 0;
-        });
-      } else if (typeof data.nutrition === 'object') {
+      // If server returns a nutrition object or array, handle accordingly
+      if (data.nutrition) {
+        // If nutrition is an array (multiple foods), sum up values
+        if (Array.isArray(data.nutrition)) {
+          data.nutrition.forEach(item => {
+        serverNutrition.calories += item.calories_estimate || 0;
+        serverNutrition.proteins += item.protein_g || 0;
+        serverNutrition.carbs += item.carbohydrates_g || 0;
+        serverNutrition.fats += item.fat_g || 0;
+        serverNutrition.sugar += item.sugar_g || 0;
+          });
+        } else if (typeof data.nutrition === 'object') {
+          // Single nutrition object
+          serverNutrition = {
+        calories: data.nutrition.calories_estimate || 0,
+        proteins: data.nutrition.protein_g || 0,
+        carbs: data.nutrition.carbohydrates_g || 0,
+        fats: data.nutrition.fat_g || 0,
+        sugar: data.nutrition.sugar_g || 0
+          };
+        }
+      } else {
+        // Fallback to top-level keys if nutrition not present
         serverNutrition = {
-          calories: data.nutrition.calories_estimate || 0,
-          proteins: data.nutrition.protein_g || 0,
-          carbs: data.nutrition.carbohydrates_g || 0,
-          fats: data.nutrition.fat_g || 0,
-          sugar: data.nutrition.sugar_g || 0
+          calories: data.calories_estimate || 0,
+          proteins: data.protein_g || 0,
+          carbs: data.carbohydrates_g || 0,
+          fats: data.fat_g || 0,
+          sugar: data.sugar_g || 0
         };
       }
-    } else {
-      // Fallback to top-level keys if nutrition not present
-      serverNutrition = {
-        calories: data.calories_estimate || 0,
-        proteins: data.protein_g || 0,
-        carbs: data.carbohydrates_g || 0,
-        fats: data.fat_g || 0,
-        sugar: data.sugar_g || 0
-      };
-    }
 
-    console.log('Analyzed server nutrition:', serverNutrition);
+      console.log('Analyzed server nutrition:', serverNutrition);
 
-    // Update stored data with server values
-    updateStoredFoodWithServerData(food_id, {
-      serverId: data.food_id,
-      ...serverNutrition
+      // Update stored data with server values
+      updateStoredFoodWithServerData(food_id, {
+        serverId: data.food_id,
+        ...serverNutrition
+      });
+
+      showNotification('Food added successfully', 'success');
+      document.getElementById('food-items-input').value = '';
+    })
+    .catch(error => {
+      console.error('Error saving food:', error);
+      showNotification(`Food tracked locally. Server error: ${error.message}`, 'warning');
     });
-
-    showNotification('Food added successfully', 'success');
-    document.getElementById('food-items-input').value = '';
-  } catch (error) {
-    console.error('Error saving food:', error);
-    showNotification(`Food tracked locally. Server error: ${error.message}`, 'warning');
-  }
 }
 
 /**
@@ -524,10 +527,10 @@ function addFoodToList(food) {
   // Get appropriate icon based on meal type
   let icon = 'utensils';
   switch (food.mealType) {
-    case 'breakfast': icon = 'egg'; break;
-    case 'lunch': icon = 'hamburger'; break;
-    case 'dinner': icon = 'pizza-slice'; break;
-    case 'snack': icon = 'cookie-bite'; break;
+    case 'breakfast': icon = 'mihogo'; break;
+    case 'lunch': icon = 'rice'; break;
+    case 'dinner': icon = 'pasta'; break;
+    case 'snack': icon = 'smoothie'; break;
   }
 
   // Format food items for display
@@ -545,17 +548,6 @@ function addFoodToList(food) {
   `;
 
   listContainer.appendChild(foodEntry);
-
-  // Store in localStorage for analytics
-  const storedFoods = JSON.parse(localStorage.getItem('foodData') || '[]');
-  storedFoods.push({
-    id: food.id,
-    items: food.items,
-    mealType: food.mealType,
-    time: food.time,
-    timestamp: new Date().toISOString()
-  });
-  localStorage.setItem('foodData', JSON.stringify(storedFoods));
 }
 
 /**
@@ -579,6 +571,25 @@ function updateStoredFoodWithServerData(localId, serverData) {
   }
 
   return false;
+}
+
+/**
+ * Estimate nutrition values for food items
+ * @param {string} foodItems - Comma separated food items
+ * @returns {Object} Estimated nutrition values
+ */
+function estimateNutrition(foodItems) {
+  const itemCount = foodItems.split(',').length;
+
+  // Very basic estimation based on number of items
+  // In a real app, this would use a proper food database
+  return {
+    calories: itemCount * 200,
+    protein: itemCount * 10,
+    carbs: itemCount * 25,
+    fat: itemCount * 8,
+    sugar: itemCount * 5
+  };
 }
 
 // Initialize food tracking when DOM is loaded

@@ -8,7 +8,7 @@ from app.utils import (calculate_food_nutrient_percentages, generate_food_nutrie
 from datetime import datetime, timedelta, timezone
 import uuid
 
-router = APIRouter(prefix="/suggestions", tags=["Suggestions"])
+router = APIRouter()
 
 # -------------------------------
 # Create a Food Suggestion (Admin only)

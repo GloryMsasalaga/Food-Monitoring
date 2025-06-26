@@ -3,17 +3,21 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.security import get_current_user
 from app.models import Student
+from app.schema import UserInfo
 
-router = APIRouter(prefix="/secure", tags=["Secure"])
+router = APIRouter()
 
 # --------------------------------------------
 # Route accessible to any authenticated user
 # --------------------------------------------
-@router.get("/me")
+@router.get("/me", response_model=UserInfo)
 def get_my_profile(current_user: Student = Depends(get_current_user)):
     """
     Returns the profile of the currently authenticated user.
     """
+    if not current_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    # Return user information including the UUID
     return {
         "email": current_user.email,
         "name": f"{current_user.first_name} {current_user.last_name}",

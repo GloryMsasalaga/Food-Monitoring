@@ -9,7 +9,7 @@ from app.schema import PasswordResetConfirm
 from app.models import Student
 
 
-router = APIRouter(prefix="/password-reset", tags=["Password Reset"])
+router = APIRouter()
 
 
 @router.post("/request")

@@ -64,6 +64,7 @@ class HealthOut(BaseModel):
 # Schema for creating new Food
 class FoodCreate(BaseModel):
     user_id: uuid.UUID
+    food_name: str
     meal_type: str
     food_items: str
     intake_time: datetime
@@ -74,7 +75,8 @@ class FoodCreate(BaseModel):
     protein_g: Optional[float] = None
     carbohydrates_g: Optional[float] = None
     cholesterol_mg: Optional[float] = None
-
+    class Config:
+        from_attributes = True
 
 # Schema for returning Food data
 class FoodOut(BaseModel):
@@ -119,18 +121,26 @@ class PreferenceOut(BaseModel):
     class Config:
         from_attributes = True
 
-
+class UserInfo(BaseModel):
+    user_id: uuid.UUID
+    first_name: str
+    last_name: str
+    email: str
+    
+    class Config:
+        from_attributes = True  
+        
 # Schema for creating new Drink
 class DrinkCreate(BaseModel):
     user_id: uuid.UUID
-    drink_type: str
+    drink_type: str="Juice"
     drink_time: datetime
     volume_ml: int
     sugar_g: Optional[float] = None
-    calories: Optional[float] = None
-    caffeine_mg: Optional[float] = None
+    #calories: Optional[float] = None
+    #caffeine_mg: Optional[float] = None
     sodium_mg: Optional[float] = None
-    potassium_mg: Optional[float] = None
+    #potassium_mg: Optional[float] = None
 
 
 # Schema for returning drink data
@@ -141,15 +151,32 @@ class DrinkOut(BaseModel):
     drink_time: datetime
     volume_ml: int
     sugar_g: Optional[float] = None
-    calories: Optional[float] = None
-    caffeine_mg: Optional[float] = None
+    #calories: Optional[float] = None
+    #caffeine_mg: Optional[float] = None
     sodium_mg: Optional[float] = None
-    potassium_mg: Optional[float] = None
+    #potassium_mg: Optional[float] = None
 
 
     class Config:
         from_attributes = True
 
+class WaterIntakeCreate(BaseModel):
+    amount_ml: int = Field(..., gt=0, description="Amount of water in milliliters")
+    
+class WaterProgressEntry(BaseModel):
+    drink_id: str
+    amount_ml: int
+    intake_time: datetime
+    
+class WaterProgressResponse(BaseModel):
+    current_intake_ml: int
+    goal_ml: int
+    progress_percent: int
+    entries: list[WaterProgressEntry]
+    
+    model_config = ConfigDict(
+        from_attributes=True
+        )
 
 # Schema for creating new Allergy
 class AllergyCreate(BaseModel):

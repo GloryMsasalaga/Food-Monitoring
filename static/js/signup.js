@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const date_of_birth = new Date(document.getElementById('date_of_birth').value).toISOString().split('T')[0];
 
         try {
-          const response = await fetch('http://127.0.0.1:8000/auth/signup', {
+          const response = await fetch('/auth/signup', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

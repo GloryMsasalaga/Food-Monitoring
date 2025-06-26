@@ -38,7 +38,6 @@ class Health(Base):
     weight_kg = Column(Float, nullable=False)
     measurement_time = Column(TIMESTAMP(timezone=True), nullable=False)
 
-
 class Food(Base):
     __tablename__ = "food"
 
@@ -65,10 +64,10 @@ class Drink(Base):
     drink_time = Column(DateTime(timezone=True), nullable=False)
     volume_ml = Column(Integer, nullable=False)
     sugar_g = Column(Float, nullable=True)
-    calories = Column(Float, nullable=True)
-    caffeine_mg = Column(Float, nullable=True)
+    #calories = Column(Float, nullable=True)
+    #caffeine_mg = Column(Float, nullable=True)
     sodium_mg = Column(Float, nullable=True)
-    potassium_mg = Column(Float, nullable=True)
+    #potassium_mg = Column(Float, nullable=True)
 
 
 class Allergy(Base):
