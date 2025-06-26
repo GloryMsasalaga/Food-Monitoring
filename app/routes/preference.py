@@ -5,7 +5,7 @@ from app.database import get_db
 from app.security import get_current_user
 import uuid
 
-router = APIRouter(prefix="/preference", tags=["Preferences"])
+router = APIRouter()
 
 @router.post("/save", response_model=schema.PreferenceOut)
 def save_preference(
@@ -36,7 +36,7 @@ def save_preference(
         db.refresh(new_prefs)
         return new_prefs
     
-@router.get("/get", response_model=schema.PreferenceOut)
+@router.get("", response_model=schema.PreferenceOut)
 def get_preference(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)

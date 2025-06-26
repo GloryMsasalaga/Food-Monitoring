@@ -9,7 +9,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 import logging
 import psycopg2
-from firebase_admin import credentials, initialize_app
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

@@ -1,1 +1,7 @@
 -e ".env\n*.env\n.env.*\nfood_monitoring\n*.key\n*.pem\n*.crt\n*.p12\n*.cer\n*.jks\n*.keystore\n*.pfx\n*.secret\n*.token\n*.credentials\nclient_ID.txt\nconfig/secrets.yml\nsecrets/" 
+
+__pycache__/
+*.pyc
+.env
+*.py[cod]
+*$py.class

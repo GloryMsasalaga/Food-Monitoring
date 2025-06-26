@@ -1,5 +1,6 @@
 # app/schema.py
 
+from typing import Optional
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from datetime import date, datetime
 import uuid
@@ -17,16 +18,14 @@ class StudentCreate(BaseModel):
     role: str = "student"
 
 
-# Schema for returning student data
 class StudentOut(BaseModel):
-    user_id: UUID
+    user_id: uuid.UUID
     first_name: str
     last_name: str
     email: EmailStr
     gender: str
-    date_of_birth: date
-    start_date: datetime
-    role: str
+    date_of_birth: datetime
+    role: str = "student"
 
     class Config:
         from_attributes = True
@@ -39,47 +38,12 @@ class StudentSignup(BaseModel):
     user_password: str = Field(..., min_length=8)
     gender: GenderEnum
     date_of_birth: datetime
-    role: str = "Student"
-        
-class StudentOut(BaseModel):
-    user_id: uuid.UUID
-    first_name: str
-    last_name: str
-    email: EmailStr
-    gender: str
-    date_of_birth: datetime
-    role: str = "Student"
-
-    class Config:
-        from_attributes = True
-
-
-
-# Schema for creating new device data
-class DeviceCreate(BaseModel):
-    user_id: uuid.UUID
-    device_type: str
-    registration_date: datetime
-
-
-# Schema for returning device data
-class DeviceOut(BaseModel):
-    device_id: UUID
-    user_id: uuid.UUID
-    device_type: str
-    registration_date: datetime
-
-    class Config:
-        from_attributes = True
+    role: str = "student"
 
 
 # Schema for Creating new Health
 class HealthCreate(BaseModel):
     user_id: uuid.UUID
-    device_id: uuid.UUID
-    heart_rate_bpm: int
-    systolic_bp: int
-    diastolic_bp: int
     height_m: float = None
     weight_kg: float = None
     measurement_time: datetime
@@ -89,26 +53,30 @@ class HealthCreate(BaseModel):
 class HealthOut(BaseModel):
     health_id: UUID
     user_id: uuid.UUID
-    device_id: uuid.UUID
-    heart_rate_bpm: int
-    systolic_bp: int
-    diastolic_bp: int
     height_m: float
     weight_kg: float
     measurement_time: datetime
 
-    class config:
+    class Config:
         from_attributes = True
 
 
 # Schema for creating new Food
 class FoodCreate(BaseModel):
     user_id: uuid.UUID
+    food_name: str
     meal_type: str
     food_items: str
     intake_time: datetime
-    calories_estimate: float
-
+    calories_estimate: Optional[float] = None
+    sugar_g: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    fat_g: Optional[float] = None
+    protein_g: Optional[float] = None
+    carbohydrates_g: Optional[float] = None
+    cholesterol_mg: Optional[float] = None
+    class Config:
+        from_attributes = True
 
 # Schema for returning Food data
 class FoodOut(BaseModel):
@@ -117,9 +85,15 @@ class FoodOut(BaseModel):
     meal_type: str
     food_items: str
     intake_time: datetime
-    calories_estimate: float
+    calories_estimate: Optional[float] = None
+    sugar_g: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    fat_g: Optional[float] = None
+    protein_g: Optional[float] = None
+    carbohydrates_g: Optional[float] = None
+    cholesterol_mg: Optional[float] = None
 
-    class config:
+    class Config:
         from_attributes = True
         
 #class for creating new preferences
@@ -147,16 +121,26 @@ class PreferenceOut(BaseModel):
     class Config:
         from_attributes = True
 
-
+class UserInfo(BaseModel):
+    user_id: uuid.UUID
+    first_name: str
+    last_name: str
+    email: str
+    
+    class Config:
+        from_attributes = True  
+        
 # Schema for creating new Drink
 class DrinkCreate(BaseModel):
     user_id: uuid.UUID
-    drink_type: str
-    amount: float
-    unit: str
-    intake_time: datetime
-    amount_ml: int
-    timestamp: datetime = Field(default_factory=datetime.now)
+    drink_type: str="Juice"
+    drink_time: datetime
+    volume_ml: int
+    sugar_g: Optional[float] = None
+    #calories: Optional[float] = None
+    #caffeine_mg: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    #potassium_mg: Optional[float] = None
 
 
 # Schema for returning drink data
@@ -164,13 +148,35 @@ class DrinkOut(BaseModel):
     drink_id: UUID
     user_id: uuid.UUID
     drink_type: str
-    amount: float
-    amount_ml: int
-    intake_time: datetime
+    drink_time: datetime
+    volume_ml: int
+    sugar_g: Optional[float] = None
+    #calories: Optional[float] = None
+    #caffeine_mg: Optional[float] = None
+    sodium_mg: Optional[float] = None
+    #potassium_mg: Optional[float] = None
 
-    class config:
+
+    class Config:
         from_attributes = True
 
+class WaterIntakeCreate(BaseModel):
+    amount_ml: int = Field(..., gt=0, description="Amount of water in milliliters")
+    
+class WaterProgressEntry(BaseModel):
+    drink_id: str
+    amount_ml: int
+    intake_time: datetime
+    
+class WaterProgressResponse(BaseModel):
+    current_intake_ml: int
+    goal_ml: int
+    progress_percent: int
+    entries: list[WaterProgressEntry]
+    
+    model_config = ConfigDict(
+        from_attributes=True
+        )
 
 # Schema for creating new Allergy
 class AllergyCreate(BaseModel):
@@ -186,31 +192,47 @@ class AllergyOut(BaseModel):
     allergy_type: str
     description: str
 
-    class config:
+    class Config:
         from_attributes = True
 
 
-# Schema for creating new suggestion
-class SuggestionCreate(BaseModel):
+# Schema for creating new food suggestion
+class FoodSuggestionCreate(BaseModel):
     user_id: uuid.UUID
-    based_on_bp: str
     food_sg: str
-    drink_sg: str
     generated_on: datetime
+    suggestion_type: str
 
 
-# Schema for returning Food suggestion data
-class SuggestionOut(BaseModel):
+# Schema for returning food suggestion data
+class FoodSuggestionOut(BaseModel):
     suggestion_id: UUID
     user_id: uuid.UUID
-    based_on_bp: str
     food_sg: str
-    drink_sg: str
     generated_on: datetime
+    suggestion_type: str
 
-    class config:
+    class Config:
         from_attributes = True
 
+# Schema for creating new drink suggestion
+class DrinkSuggestionCreate(BaseModel):
+    user_id: uuid.UUID
+    drink_sg: str
+    generated_on: datetime
+    suggestion_type: str
+
+
+# Schema for returning drink suggestion data
+class DrinkSuggestionOut(BaseModel):
+    suggestion_id: UUID
+    user_id: uuid.UUID
+    drink_sg: str
+    generated_on: datetime
+    suggestion_type: str
+
+    class Config:
+        from_attributes = True
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -224,7 +246,6 @@ class TokenResponse(BaseModel):
 
 class PasswordResetRequest(BaseModel):
     email: EmailStr
-
 
 class PasswordResetConfirm(BaseModel):
     token: str

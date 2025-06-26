@@ -45,7 +45,7 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
   font-family: 'Bubblegum Sans', cursive;
-  color: #ff4b8b;
+  color: #c13e3e;
   
 }
 .logo-icon {
@@ -57,12 +57,12 @@ body {
 nav .nav-link {
   margin: 0 1rem;
   text-decoration: none;
-  color: #555;
+  color: #00656D;
   font-weight: 500;
 }
 nav .nav-link.active,
 nav .nav-link:hover {
-  color: #ff4b8b;
+  color: #00656D;
 }
 .auth .btn-outline {
   margin-right: 1rem;
@@ -71,7 +71,7 @@ nav .nav-link:hover {
 /* ========== BUTTONS ========== */
 .btn-primary {
   display: inline-block;
-  background: #ff4b8b;
+  background: #c13e3e;
   color: #fff;
   padding: 0.7rem 1.6rem;
   border-radius: 50px;
@@ -81,14 +81,14 @@ nav .nav-link:hover {
   font-family: 'Poppins', sans-serif;
 }
 .btn-primary:hover {
-  background: #e63e78;
+  background: #A63A3A;
   font-family: 'Poppins', sans-serif;
 }
 .btn-outline {
   display: inline-block;
-  color: #ff4b8b;
+  color: #00656D;
   padding: 0.7rem 1.6rem;
-  border: 2px solid #ff4b8b;
+  border: 2px solid #00656D;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
@@ -96,7 +96,7 @@ nav .nav-link:hover {
   font-family: 'Poppins', sans-serif;
 }
 .btn-outline:hover {
-  background: #ff4b8b;
+  background: #00656D;
   color: #fff;
   font-family: 'Poppins', sans-serif;
 }
@@ -112,7 +112,7 @@ nav .nav-link:hover {
 /* ========== HERO ========== */
 .hero {
   padding: 4rem 0;
-  background: linear-gradient(135deg, rgba(255, 228, 240, 0.8), rgba(255, 252, 220, 0.8)); /* More light pink and light yellow */
+  background: linear-gradient(135deg, rgba(74, 109, 140, 0.8), rgba(230, 168, 23, 0.8)); /* Gradient background */
   height: 100vh; /* Full screen height */
   width: 100%; /* Full width */
   display: flex;
@@ -156,10 +156,10 @@ nav .nav-link:hover {
   font-family: 'Poppins', sans-serif;
 }
 .accent-pink {
-  color: #ff4b8b;
+  color: #C13E3E;
 }
 .accent-green {
-  color: #3cb371;
+  color: #00656D;
 }
 .chef-icon{
   width: 50px;
@@ -172,7 +172,7 @@ nav .nav-link:hover {
   justify-content: space-around;
   align-items: center;
   gap: 2rem;
-  background: linear-gradient(135deg, #fdfcdc, #fdf8bf, #ffe8d6); /* Light pink, purple, and green */
+  background: linear-gradient(135deg, #f8f9fc, #ffffff, #FBF0DC); /* Light pink, purple, and green */
   padding: 3rem;
   border-radius: 30px;
   overflow: hidden;
@@ -262,8 +262,8 @@ nav .nav-link:hover {
 }
 .card-icon {
   font-size: 2rem;
-  color: #ff4b8b;
-  background: #fff5f7;
+  color: #00656D;
+  background: #E6F5F6;
   padding: 0.7rem;
   border-radius: 50%;
   position: absolute;
@@ -359,9 +359,18 @@ nav .nav-link:hover {
     border-radius: 50%;
     font-size: 1.5rem;
   }
-  .bg-pink        { background: rgba(255,75,139,0.15); color: #ff4b8b; }
-  .bg-yellow      { background: rgba(255,206,107,0.15); color: #ffc26b; }
-  .bg-pink-light  { background: rgba(255,75,139,0.1 ); color: #ff4b8b; }
+.bg-pink { 
+  background: rgba(193, 62, 62, 0.15); /* Brick red */
+  color: #C13E3E; 
+}
+.bg-yellow { 
+  background: rgba(230, 168, 23, 0.15); /* Golden amber */
+  color: #E6A817; 
+}
+.bg-pink-light { 
+  background: rgba(0, 101, 109, 0.1); /* Deep teal */
+  color: #00656D; 
+}
   
   .feature-card h3 {
     margin-bottom: 0.5rem;
@@ -384,7 +393,7 @@ nav .nav-link:hover {
    Feature = "Ready to transform" & "footer"
    ============================ */
    .cta-section {
-    background: linear-gradient(135deg, rgba(255, 239, 213, 0.8), rgba(255, 228, 240, 0.8)); /* Light yellow and light pink */
+    background: linear-gradient(135deg, rgba(74, 109, 140, 0.8), rgba(230, 168, 23, 0.8)); /* Light yellow and light pink */
     text-align: center;
     padding: 3rem 1rem;
   }
@@ -406,7 +415,7 @@ nav .nav-link:hover {
   .cta-button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background: #ff4b8b; /* Accent pink */
+    background: #00656D; /* Accent pink */
     color: #fff;
     text-decoration: none;
     border-radius: 50px;
@@ -416,7 +425,7 @@ nav .nav-link:hover {
   }
   
   .cta-button:hover {
-    background: #ff6fa1; /* Slightly lighter pink on hover */
+    background: #004E59; /* Slightly lighter pink on hover */
   }
 
   .cta-footer {
@@ -446,7 +455,7 @@ nav .nav-link:hover {
   .cta-footer .logo-text {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #ff4b8b;
+    color: #C13E3E;
     font-family: 'Bubblegum Sans', cursive;
   }
   
@@ -497,7 +506,7 @@ p.subtitle {
 }
 .signin-page .hero {
   padding: 1rem 1rem; /* Adjust padding for better spacing */
-  background: linear-gradient(135deg, rgba(255, 228, 240, 0.8), rgba(255, 252, 220, 0.8)); /* Light pink and yellow gradient */
+  background: linear-gradient(135deg,rgba(0, 101, 109, 0.2), rgba(230, 168, 23, 0.2)); /* Light pink and yellow gradient */
   /*min-height: calc(100vh - 120px); /* Full viewport height */
   display: flex;
   flex-direction: column;
@@ -567,9 +576,9 @@ p.subtitle {
   width: 100%;
   padding: 0.6rem 1rem;
   padding-left: 2.5rem;
-  border: 1px solid #f2d8d8;
+  border: 1px solid #E1E8EC;
   border-radius: 2rem;
-  background-color: #fff8f8;
+  background-color: #F8FBFC;
   font-size: 0.9rem;
 }
 
@@ -594,12 +603,12 @@ p.subtitle {
 }
 
 .forgot a {
-  color: #f06292;
+  color: #00656D;
   text-decoration: none;
 }
 
 .btn {
-  background-color: #f06292;
+  background-color: #C13E3E;
   color: white;
   border: none;
   padding: 0.8rem 2rem;
@@ -613,7 +622,7 @@ p.subtitle {
 }
 
 .btn:hover {
-  background-color: #e05582;
+  background-color: #A63A3A;
 }
 
 .signup {
@@ -623,7 +632,7 @@ p.subtitle {
 }
 
 .signup a {
-  color: #f06292;
+  color: #00656D;
   text-decoration: none;
 }
 
@@ -670,7 +679,7 @@ p.subtitle {
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 50%; /* Make buttons circular */
-  background:  rgba(255, 228, 240, 0.8);
+  background:  rgba(230, 168, 23, 0.2);
   font-size: 1.2rem; /* Adjust icon size */
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
@@ -738,7 +747,7 @@ p.subtitle {
 .wizard-title {
   font-family: 'Permanent Marker', cursive;
   font-size: 1.8rem;
-  color: #ff6b81;
+  color: #C13E3E;
 }
 .wizard-subtitle {
   color: #4b5563;
@@ -781,7 +790,7 @@ p.subtitle {
 }
 .radio-group input {
   margin-right: .3rem;
-  accent-color: #ff6b81;
+  accent-color: #e6a817;
 }
 
 @keyframes fadeIn {

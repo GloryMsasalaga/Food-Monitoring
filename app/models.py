@@ -1,15 +1,15 @@
 # app/models.py
 
 from pydantic import BaseModel, EmailStr
-from sqlalchemy import Column, String, Integer, Float, Double, DateTime, ForeignKey, Text, TIMESTAMP, Enum as SQLEnum
+from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Text, TIMESTAMP, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import uuid
+from sqlalchemy.sql import func
+from app.database import Base
 import enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from app.database import Base
 
 Base = declarative_base()
 class GenderEnum(str, enum.Enum):
@@ -19,79 +19,84 @@ class Student(Base):
     __tablename__ = "student"
 
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    first_name = Column(String(100), nullable=False)
-    last_name = Column(String(100), nullable=False)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     user_password = Column(Text, nullable=False)
     gender = Column(SQLEnum(GenderEnum, name="gender_enum"), nullable=False)
     date_of_birth = Column(DateTime, nullable=False)
     start_date = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
-    role = Column(String, default="student", nullable=False) # Could be User or an Admin
-
-
-class Device(Base):
-    __tablename__= "device"
-
-    device_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    device_type = Column(String(50), nullable=False)
-    registration_date = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    role = Column(String, default="student", nullable=False)  # student or admin
 
 
 class Health(Base):
-    __tablename__= "health"
+    __tablename__ = "health"
 
     health_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    device_id = Column(UUID(as_uuid=True), ForeignKey(Device.device_id, ondelete="CASCADE"), nullable=False)
-    heart_rate_bpm = Column(Integer, nullable=False)
-    systolic_bp = Column(Integer, nullable=False)
-    diastolic_bp = Column(Integer, nullable=False)
     height_m = Column(Float, nullable=False)
     weight_kg = Column(Float, nullable=False)
     measurement_time = Column(TIMESTAMP(timezone=True), nullable=False)
 
-
 class Food(Base):
-    __tablename__= "food"
+    __tablename__ = "food"
 
     food_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    meal_type = Column(String(50), nullable=False)
+    meal_type = Column(String(10), nullable=False)
     food_items = Column(Text, nullable=False)
-    intake_time = Column(TIMESTAMP(timezone=True), nullable=False)
-    calories_estimate = Column(Float)
+    intake_time = Column(DateTime(timezone=True), nullable=False)
+    calories_estimate = Column(Float, nullable=True) 
+    sugar_g = Column(Float, nullable=True)
+    sodium_mg = Column(Float, nullable=True)
+    fat_g = Column(Float, nullable=True)
+    protein_g = Column(Float, nullable=True)
+    carbohydrates_g = Column(Float, nullable=True)
+    cholesterol_mg = Column(Float, nullable=True)
 
 
 class Drink(Base):
-    __tablename__= "drink"
+    __tablename__ = "drink"
 
     drink_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
     drink_type = Column(String(100), nullable=False)
-    sugar_g = Column(Float)
+    drink_time = Column(DateTime(timezone=True), nullable=False)
     volume_ml = Column(Integer, nullable=False)
-    drink_time = Column(TIMESTAMP(timezone=True), nullable=False)
+    sugar_g = Column(Float, nullable=True)
+    #calories = Column(Float, nullable=True)
+    #caffeine_mg = Column(Float, nullable=True)
+    sodium_mg = Column(Float, nullable=True)
+    #potassium_mg = Column(Float, nullable=True)
 
 
 class Allergy(Base):
-    __tablename__= "allergy"
+    __tablename__ = "allergy"
 
     allergy_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    allergy_type = Column(String(100))
+    allergy_type = Column(String(100), nullable=False)
     description = Column(Text)
 
 
-class Suggestion(Base):
-    __tablename__= "food_suggestion"
+class FoodSuggestion(Base):
+    __tablename__ = "food_suggestion"
 
     suggestion_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    user_id = user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
-    based_on_bp = Column(String(50), nullable=False)
-    food_sg = Column(String(100), nullable=False)
-    drink_sg = Column(String(100), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
+    food_sg = Column(String(5000), nullable=False)
     generated_on = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    suggestion_type = Column(String(10), nullable=False)  # weekly, monthly
+
+
+class DrinkSuggestion(Base):
+    __tablename__ = "drink_suggestion"
+
+    suggestion_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey(Student.user_id, ondelete="CASCADE"), nullable=False)
+    drink_sg = Column(String(5000), nullable=False)
+    generated_on = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    suggestion_type = Column(String(10), nullable=False)  # weekly, monthly
 
 
 class LoginRequest(BaseModel):

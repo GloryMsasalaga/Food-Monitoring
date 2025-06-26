@@ -1,8 +1,7 @@
 # app/main.py
 from fastapi.responses import RedirectResponse
 import os
-from pathlib import Path
-from fastapi import FastAPI, Request, Form, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, Form
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,16 +14,14 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from sqlalchemy.orm import Session
 from app import models, database
+from app.routes import (
+    analysis, student, health, food, drink,
+    allergy, suggestion, auth, secure, password_reset, preference)
 from app.routes.auth import login_student
 from app.routes.secure import get_current_user
 from jose import jwt
 from app.models import Student
-
 from app.security import SECRET_KEY, ALGORITHM
-from app.routes import (
-    student, device, health, food, drink,
-    allergy, food_suggestion, auth, secure, password_reset, preference
-)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,7 +31,7 @@ models.Base.metadata.create_all(bind=database.engine)
 
 # Initialize FastAPI
 app = FastAPI(
-    title="Food Monitoring API",
+    title="Nutrition Tracking API",
     version="1.0.0",
     description="Monitoring API with JWT Authentication"
 )
@@ -98,15 +95,14 @@ app.openapi = custom_openapi
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(secure.router, prefix="/secure", tags=["Secure"])
 app.include_router(password_reset.router, prefix="/password_reset", tags=["Password Reset"])
-app.include_router(food_suggestion.router, prefix="/suggestions", tags=["Suggestions"])
+app.include_router(analysis.router, prefix="/intake-analysis", tags=["Intake-Analysis"])
+app.include_router(suggestion.router, prefix="/suggestions", tags=["Suggestions"])
 app.include_router(student.router, prefix="/student", tags=["Student"])
-app.include_router(device.router, prefix="/device", tags=["Device"])
 app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(food.router, prefix="/food", tags=["Food"])
 app.include_router(drink.router, prefix="/drink", tags=["Drink"])
 app.include_router(allergy.router, prefix="/allergy", tags=["Allergy"])
-app.include_router(preference.router)
-
+app.include_router(preference.router, prefix="/preference", tags=["Preferences"])
 # Root route
 
 @app.get("/", response_class=HTMLResponse)
@@ -133,7 +129,20 @@ async def read_dashboard(request: Request):
 async def read_setpreference(request: Request, user: Student = Depends(get_current_user)):
     # This will redirect to login if user is not authenticated
     from app.utils import templates
+    return templates.TemplateResponse("setpreference.html", {"request": request})
+
+@app.get("/env-check")
+def check_env():
+    return {
+        "app_id": os.getenv("NUTRITIONIX_APP_ID"),
+        "app_key": os.getenv("NUTRITIONIX_API_KEY")
+    }
     return templates.TemplateResponse("setpreference.html", {"request": request, "user": user})
+
+@app.get("/reset-password", response_class=HTMLResponse)
+async def reset_password_page(request: Request):
+    from app.utils import templates
+    return templates.TemplateResponse("reset-password.html", {"request": request})
 
 @app.post("/process_preference", response_class=HTMLResponse)
 async def process_preference(

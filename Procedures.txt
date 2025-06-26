@@ -1,8 +1,3 @@
-First   -> models.py
-Second  -> schema.py
-Third   -> route_file.py
-Fourth  -> main.py
-
 1. Routers with their CRUD Operations
 2. Security Features
     Role-based auth
